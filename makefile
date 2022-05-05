@@ -4,7 +4,8 @@ BIN_DIR=bin
 SRC_DIR=src
 
 #Archivos
-FILES = main keys
+FILES = main keys\
+	read_file
 OBJECTS=$(patsubst %, $(OBJ_DIR)/%.o, $(FILES))
 OUTPUT=$(BIN_DIR)/main
 
