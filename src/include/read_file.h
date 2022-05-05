@@ -11,7 +11,8 @@
 char *read_file(const char *filename,int * size);
 void asignar_iter(char * origen,int size);
 bool seguir_iter();
-bool inc_iter();
+void inc_iter();
 char get_char_iter();
 bool cmp_iter_char(char c);
+bool inc_iter_if_cmp(char c);
 #endif

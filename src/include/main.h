@@ -10,6 +10,7 @@
 /******************/
 #include "keys.h"
 #include "dibujar.h"
+#include "cargar_figuras.h"
 /******************/
 
 #endif

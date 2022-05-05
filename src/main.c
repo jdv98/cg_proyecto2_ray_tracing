@@ -12,7 +12,7 @@ int main(int argc, char **argv)
   RESOLUCION_W = 1000;
   RESOLUCION_H = 1000;
 
-  const char *filename = "mapa/mapa.txt";
+  const char *filename = "archivos/figuras.txt";
   if (argc < 4 || argc > 4)
   {
     (void)fprintf(stdout, "Usage: %s <resolucion> <width> <height>\n\n", argv[0]);
@@ -25,6 +25,7 @@ int main(int argc, char **argv)
   }
 
   init_buffer();
+  cargar_figura(filename);
 
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);

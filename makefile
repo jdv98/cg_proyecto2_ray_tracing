@@ -5,7 +5,8 @@ SRC_DIR=src
 
 #Archivos
 FILES = main keys\
-	read_file
+	read_file\
+	cargar_figuras
 OBJECTS=$(patsubst %, $(OBJ_DIR)/%.o, $(FILES))
 OUTPUT=$(BIN_DIR)/main
 
