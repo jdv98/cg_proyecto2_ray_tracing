@@ -9,19 +9,14 @@ void init_buffer();
 int main(int argc, char **argv)
 {
 
-  RESOLUCION_W = 1000;
-  RESOLUCION_H = 1000;
+  RESOLUCION_W = 1008;
+  RESOLUCION_H = 567;
 
-  const char *filename = "mapa/mapa.txt";
-  if (argc < 4 || argc > 4)
+  const char *filename = "";
+  if (argc == 3)
   {
-    (void)fprintf(stdout, "Usage: %s <resolucion> <width> <height>\n\n", argv[0]);
-    exit(0);
-  }
-  else if (argc == 4)
-  {
-    RESOLUCION_W = atoi(argv[2])*atoi(argv[1]);
-    RESOLUCION_H = atoi(argv[3])*atoi(argv[1]);
+    RESOLUCION_W = atoi(argv[1]);
+    RESOLUCION_H = atoi(argv[2]);
   }
 
   init_buffer();
