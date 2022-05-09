@@ -28,10 +28,10 @@ $(OBJ_DIR)/%.o : $(SRC_DIR)/%.c
 -include $(OBJ_DIR)/*.d
 
 run: $(OUTPUT)
-	./$(OUTPUT) $(r) $(w) $(h)
+	./$(OUTPUT) $(w) $(h)
 
 valgrind: $(OUTPUT)
-	valgrind ./$(OUTPUT) $(r) $(w) $(h)
+	valgrind ./$(OUTPUT) $(w) $(h)
 
 clean:
 	rm -rf $(BIN_DIR) $(OBJ_DIR)
