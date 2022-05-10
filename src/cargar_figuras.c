@@ -36,6 +36,7 @@ long double leer_numero()
 {
     bool init = true;
     long double num = 0;
+    bool negativo=inc_iter_if_cmp('-');
 
     while (get_char_iter() > 47 && get_char_iter() < 58)
     {
@@ -63,7 +64,7 @@ long double leer_numero()
             inc_iter();
         }
     }
-    return num;
+    return negativo?(-1*num):num;
 }
 
 Color * leer_color(){
@@ -123,6 +124,19 @@ void leer_caras(Poligono * poligono){
         error("cara");
 }
 
+void leer_ojo(){
+    init_ojo_struct(leer_vertice());
+}
+
+void leer_frame(){
+    Vertice * bl, * tr;
+    bl=leer_vertice();
+    inc_iter_if_cmp(',');
+    tr=leer_vertice();
+    
+    init_frame_struct(bl,tr);
+}
+
 void leer_poligono()
 {
     Poligono * poligono = init_poligono_struct(leer_color());
@@ -153,6 +167,12 @@ void leer_figura()
 
         else if(tipo_figura == POLIGONO)
             leer_poligono();
+        
+        else if(tipo_figura == OJO)
+            leer_ojo();
+
+        else if(tipo_figura == FRAME)
+            leer_frame();
     }
     if (!inc_iter_if_cmp('}'))
         error("figura");
