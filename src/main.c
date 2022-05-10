@@ -1,10 +1,13 @@
 #include "include/main.h"
+#include "include/ray_tracer.h"
 
 Color **buffer;
+Color * background_color;
 int RESOLUCION_H,RESOLUCION_W;
 
 void draw_scene();
 void init_buffer();
+void init_background(double r, double g, double b);
 
 int main(int argc, char **argv)
 {
@@ -20,7 +23,9 @@ int main(int argc, char **argv)
   }
 
   init_buffer();
+  init_background(0.1,0.1,0.1);
   cargar_figura(filename);
+  ray_tracer();
 
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
@@ -72,4 +77,11 @@ void init_buffer(){
       buffer[i][j].b = 0.0;
     }
   }
+}
+
+void init_background(double r, double g, double b){
+  background_color=malloc(sizeof(Color));
+  background_color->r=r;
+  background_color->g=g;
+  background_color->b=b;
 }

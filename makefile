@@ -7,7 +7,8 @@ SRC_DIR=src
 FILES = main keys\
 	read_file\
 	cargar_figuras\
-	estructuras
+	estructuras\
+	ray_tracer
 OBJECTS=$(patsubst %, $(OBJ_DIR)/%.o, $(FILES))
 OUTPUT=$(BIN_DIR)/main
 

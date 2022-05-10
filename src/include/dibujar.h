@@ -6,6 +6,7 @@
 #include "estructuras.h"
 
 extern Color **buffer;
+extern Color * background_color;
 
 extern int RESOLUCION_H;
 extern int RESOLUCION_W;

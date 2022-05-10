@@ -1,5 +1,5 @@
-#ifndef TIPO_POLIGONO_H
-#define TIPO_POLIGONO_h
+#ifndef TIPO_FIGURA_H
+#define TIPO_FIGURA_h
 
 #define LUZ 0
 #define ESFERA 1
