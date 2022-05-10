@@ -3,14 +3,9 @@
 
 #include <stddef.h>
 #include <stdbool.h>
+#include "estructuras.h"
 
-typedef struct {
-  double r;
-  double g;
-  double b;
-} COLOR;
-
-extern COLOR **buffer;
+extern Color **buffer;
 
 extern int RESOLUCION_H;
 extern int RESOLUCION_W;

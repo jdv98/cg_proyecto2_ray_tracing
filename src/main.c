@@ -1,6 +1,6 @@
 #include "include/main.h"
 
-COLOR **buffer;
+Color **buffer;
 int RESOLUCION_H,RESOLUCION_W;
 
 void draw_scene();
@@ -57,10 +57,10 @@ void draw_scene()
 void init_buffer(){
   int i, j;
 
-  buffer = (COLOR **)malloc(RESOLUCION_W * sizeof(COLOR));
+  buffer = (Color **)malloc(RESOLUCION_W * sizeof(Color));
   for (i = 0; i < RESOLUCION_W; i++)
   {
-    buffer[i] = (COLOR *)malloc(RESOLUCION_H * sizeof(COLOR));
+    buffer[i] = (Color *)malloc(RESOLUCION_H * sizeof(Color));
   }
 
   for (i = 0; i < RESOLUCION_W; i++)

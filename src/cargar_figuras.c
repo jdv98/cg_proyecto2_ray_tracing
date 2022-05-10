@@ -1,17 +1,41 @@
 #include "include/read_file.h"
-#include "include/tipo_poligono.h"
+#include "include/tipo_figura.h"
 #include "include/cargar_figuras.h"
+#include "include/estructuras.h"
 #include <malloc.h>
 
-static void error(int num){
-    (void)fprintf(stdout, "CARGAR_FIGURA #%i\n",num);
+static void error(char * err){
+    (void)fprintf(stdout, "CARGAR_FIGURA #%s\n",err);
     exit(0);
 }
 
-double leer_numero()
+void remove_all_chars(char* str, int * size, char * c, int size_c) {
+    char *pr = str, *pw = str;
+    bool conservar=true;
+
+    while(*pw)
+    {
+        conservar=true;
+        *pw = *pr;
+        *pr++;
+
+        for (size_t i = 0; i < size_c; i++)
+        {
+            conservar=((*pw!=c[i]) && conservar);
+        } 
+        if(conservar)
+            pw +=1;
+        else
+            (*size)--;
+    }
+
+    *pw = '\0';
+}
+
+long double leer_numero()
 {
     bool init = true;
-    double num = 0;
+    long double num = 0;
 
     while (get_char_iter() > 47 && get_char_iter() < 58)
     {
@@ -34,7 +58,7 @@ double leer_numero()
 
         while (get_char_iter() > 47 && get_char_iter() < 58)
         {
-            num += (double)(get_char_iter() - 48) / decimales;
+            num += (long double)(get_char_iter() - 48) / decimales;
             decimales *= 10;
             inc_iter();
         }
@@ -42,24 +66,80 @@ double leer_numero()
     return num;
 }
 
-void leer_poligono()
-{
+Color * leer_color(){
+    Color * color=NULL;
     if (inc_iter_if_cmp('{'))
     {
+        double r=leer_numero();
+        if (!inc_iter_if_cmp(',')) error("color");
+        double g=leer_numero();
+        if (!inc_iter_if_cmp(',')) error("color");
+        double b=leer_numero();
 
+        color = init_color_struct(r,g,b);
     }
     if (!inc_iter_if_cmp('}'))
-        error(3);
+        error("color");
+
+    return color;
+}
+
+Vertice * leer_vertice(){
+
+    Vertice * vertice=NULL;
+
+    if (inc_iter_if_cmp('{'))
+    {
+        long double x=leer_numero();
+        if (!inc_iter_if_cmp(',')) error("vertice");
+        long double y=leer_numero();
+        if (!inc_iter_if_cmp(',')) error("vertice");
+        long double z=leer_numero();
+
+        vertice = init_vertice_struct(x,y,z);
+    }
+    if (!inc_iter_if_cmp('}'))
+        error("vertice");
+    return vertice;
+}
+
+void leer_caras(Poligono * poligono){
+    Cara * cara;
+    if (inc_iter_if_cmp('{'))
+    {
+        while (inc_iter_if_cmp('[')){
+            cara = init_cara_struct();
+            while (!inc_iter_if_cmp(']'))
+            {
+                ins_vertice_cara(cara,leer_vertice());
+                if(inc_iter_if_cmp(','));
+            }
+            ins_cara_poligono(poligono,cara);
+            inc_iter_if_cmp(',');
+        }
+        
+    }
+    if (!inc_iter_if_cmp('}'))
+        error("cara");
+}
+
+void leer_poligono()
+{
+    Poligono * poligono = init_poligono_struct(leer_color());
+    inc_iter_if_cmp(',');
+    leer_caras(poligono);
+    agregar_figura(poligono,POLIGONO);
 }
 
 void leer_esfera()
 {
-    if (inc_iter_if_cmp('{'))
-    {
-        
-    }
-    if (!inc_iter_if_cmp('}'))
-        error(2);
+    Color * color = leer_color();
+    inc_iter_if_cmp(',');
+    Vertice * vertice = leer_vertice();
+    inc_iter_if_cmp(',');
+    long double radio=leer_numero();
+
+    agregar_figura(init_esfera_struct(color,radio,vertice),ESFERA);
 }
 
 void leer_figura()
@@ -75,13 +155,14 @@ void leer_figura()
             leer_poligono();
     }
     if (!inc_iter_if_cmp('}'))
-        error(1);
+        error("figura");
 }
 
 void cargar_figura(const char *filename)
 {
     int size = 0;
     char *original = read_file(filename, &size);
+    remove_all_chars(original,&size, (char[]){32,'\n'},2);
     asignar_iter(original, size);
 
     // INIT
@@ -94,5 +175,5 @@ void cargar_figura(const char *filename)
 
     free(original);
     if(size==0)
-        error(0);
+        error("carga");
 }

@@ -6,7 +6,8 @@ SRC_DIR=src
 #Archivos
 FILES = main keys\
 	read_file\
-	cargar_figuras
+	cargar_figuras\
+	estructuras
 OBJECTS=$(patsubst %, $(OBJ_DIR)/%.o, $(FILES))
 OUTPUT=$(BIN_DIR)/main
 
@@ -31,7 +32,7 @@ run: $(OUTPUT)
 	./$(OUTPUT) $(w) $(h)
 
 valgrind: $(OUTPUT)
-	valgrind ./$(OUTPUT) $(w) $(h)
+	valgrind -s ./$(OUTPUT) $(w) $(h)
 
 clean:
 	rm -rf $(BIN_DIR) $(OBJ_DIR)
