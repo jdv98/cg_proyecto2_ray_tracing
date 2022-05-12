@@ -3,9 +3,11 @@
 #include "include/estructuras.h"
 #include "include/tipo_figura.h"
 
+Foco * lista_focos = NULL;
 Figura *lista_figuras = NULL;
 Ojo *ojo;
 Frame *frame;
+Ambiente * ambiente;
 
 Color *init_color_struct(double r, double g, double b)
 {
@@ -29,6 +31,20 @@ Vertice *init_vertice_struct(long double x, long double y, long double z)
     vertice->z = z;
 
     return vertice;
+}
+
+Foco * init_foco_struct(long double intensidad, Vertice * vertice){
+    Foco * foco = malloc(sizeof(Foco));
+
+    if(intensidad<0)
+        intensidad=0;
+    else if(intensidad>1)
+        intensidad=1;
+
+    foco->intensidad=intensidad;
+    foco->vertice;
+
+    return foco;
 }
 
 void init_ojo_struct(Vertice *vertice)
@@ -70,6 +86,17 @@ Poligono *init_poligono_struct(Color *color)
     return poligono;
 }
 
+void init_ambiente_struct(long double iluminacion){
+    ambiente=malloc(sizeof(Ambiente));
+
+    if(iluminacion<0)
+        iluminacion=0;
+    else if(iluminacion>1)
+        iluminacion=1;
+
+    ambiente->iluminacion=iluminacion;
+}
+
 /***/
 
 void ins_vertice_cara(Cara *cara, Vertice *vertice)
@@ -86,11 +113,18 @@ void ins_cara_poligono(Poligono *poligono, Cara *cara)
     poligono->caras[poligono->cant_caras - 1] = cara;
 }
 
-void agregar_figura(void *figura, int tipo_figura)
+void agregar_figura(void *figura, int tipo_figura, long double * iluminacion)
 {
     Figura *figura_nueva = malloc(sizeof(Figura));
     figura_nueva->figura = figura;
     figura_nueva->tipo = tipo_figura;
+    
+    /***/
+    figura_nueva->k_d=iluminacion[0];
+    figura_nueva->k_a=iluminacion[1];
+    free(iluminacion);
+    /***/
+
     figura_nueva->ant = NULL;
     figura_nueva->sig = NULL;
 
@@ -116,6 +150,25 @@ void agregar_figura(void *figura, int tipo_figura)
         figura_nueva->sig = lista_figuras;
     }
 }
+
+void agregar_foco(Foco * foco){
+    if(lista_focos == NULL){
+        lista_focos = foco;
+        lista_focos->sig = NULL;
+    }
+    else{
+        Foco * iter = lista_focos;
+        while (iter->sig != NULL)
+        {
+            iter = iter->sig;
+        }
+
+        iter->sig = foco;
+        foco->sig = NULL;
+    }
+}
+
+/***/
 
 void liberar_esfera(Esfera *esfera)
 {

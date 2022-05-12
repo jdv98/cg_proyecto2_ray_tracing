@@ -4,6 +4,8 @@
 #include "include/estructuras.h"
 #include <malloc.h>
 
+long double leer_numero();
+
 static void error(char * err){
     (void)fprintf(stdout, "CARGAR_FIGURA #%s\n",err);
     exit(0);
@@ -30,6 +32,36 @@ void remove_all_chars(char* str, int * size, char * c, int size_c) {
     }
 
     *pw = '\0';
+}
+
+long double * leer_iluminacion_figura(){
+    long double * datos = malloc(sizeof(long double) * 2);
+
+    if(!inc_iter_if_cmp('{'))
+        error("{-> iluminacion figura");
+    
+    long double kd=leer_numero();
+    if(kd>1)
+        kd=1;
+    else if(kd<0)
+        kd=0;
+
+    if(!inc_iter_if_cmp(','))
+        error(",-> iluminacion figura");
+
+    long double ka=leer_numero();
+    if(ka>1)
+        ka=1;
+    else if(ka<0)
+        ka=0;
+
+    if(!inc_iter_if_cmp('}'))
+        error("{-> iluminacion figura");
+    
+    datos[0]=kd;
+    datos[1]=ka;
+
+    return datos;
 }
 
 long double leer_numero()
@@ -141,19 +173,41 @@ void leer_poligono()
 {
     Poligono * poligono = init_poligono_struct(leer_color());
     inc_iter_if_cmp(',');
+    long double * ilu = leer_iluminacion_figura();
+    inc_iter_if_cmp(',');
     leer_caras(poligono);
-    agregar_figura(poligono,POLIGONO);
+    agregar_figura(poligono,POLIGONO,ilu);
 }
 
 void leer_esfera()
 {
     Color * color = leer_color();
     inc_iter_if_cmp(',');
+    long double * ilu = leer_iluminacion_figura();
+    inc_iter_if_cmp(',');
     Vertice * vertice = leer_vertice();
     inc_iter_if_cmp(',');
     long double radio=leer_numero();
 
-    agregar_figura(init_esfera_struct(color,radio,vertice),ESFERA);
+    agregar_figura(init_esfera_struct(color,radio,vertice),ESFERA,ilu);
+}
+
+void leer_foco(){
+    long double ip = leer_numero();
+    if(!inc_iter_if_cmp(','))
+        error("foco");
+    Vertice * vertice = leer_vertice();
+
+    agregar_foco(init_foco_struct(ip,vertice));
+}
+
+void leer_ambiente(){
+    if(get_char_iter() > 47 && get_char_iter() < 58){
+        init_ambiente_struct(leer_numero());
+    }
+    else{
+        error("ambiente");
+    }
 }
 
 void leer_figura()
@@ -161,8 +215,13 @@ void leer_figura()
     if (inc_iter_if_cmp('{'))
     {
         int tipo_figura = (int)leer_numero();
+        if(!inc_iter_if_cmp(','))
+            error(", despues de id");
 
-        if (tipo_figura == ESFERA)
+        if(tipo_figura == FOCO)
+            leer_foco();
+
+        else if (tipo_figura == ESFERA)
             leer_esfera();
 
         else if(tipo_figura == POLIGONO)
@@ -173,6 +232,9 @@ void leer_figura()
 
         else if(tipo_figura == FRAME)
             leer_frame();
+        
+        else if(tipo_figura == AMBIENTE)
+            leer_ambiente();
     }
     if (!inc_iter_if_cmp('}'))
         error("figura");
