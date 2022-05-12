@@ -19,8 +19,8 @@ Interseca * interseccion_esfera(Esfera *esfera, Vertice *d)
     long double
         alpha = powl(d->x,2)+powl(d->y,2)+powl(d->z,2),
         beta = ((long double)2) * ((d->x * (ojo->vertice->x - esfera->vertice->x)) +
-                    (d->y * (ojo->vertice->y - esfera->vertice->y)) +
-                    (d->z * (ojo->vertice->z - esfera->vertice->z))),
+                                   (d->y * (ojo->vertice->y - esfera->vertice->y)) +
+                                   (d->z * (ojo->vertice->z - esfera->vertice->z))),
         gamma = powl(ojo->vertice->x - esfera->vertice->x, 2) +
                 powl(ojo->vertice->y - esfera->vertice->y, 2) +
                 powl(ojo->vertice->z - esfera->vertice->z, 2) -
@@ -42,12 +42,23 @@ Interseca * interseccion_esfera(Esfera *esfera, Vertice *d)
         t1 = (-beta - sqrtl(tmp)) / (2 * alpha);
         t2 = (-beta + sqrtl(tmp)) / (2 * alpha);
 
-        if(t1<t2)
-            a->tmin = t2;
-        else
-            a->tmin = t1;
 
-        return a;
+        if (t1 > 0 && t2 > 0)
+        {
+            if (t1 > t2)
+                a->tmin = t2;
+            else
+                a->tmin = t1;
+            return a;
+        }
+        else if(t1>0){
+            a->tmin = t1;
+            return a;
+        }
+        else{
+            a->tmin = t2;
+            return a;
+        }
     }
 
     free(a);
@@ -79,6 +90,7 @@ Color * first_intersection(Vertice * a, Vertice * d)
             }
         }
 
+        iter=iter->sig;
     } while (iter != lista_figuras);
 
     if(interseccion!=NULL)
@@ -102,9 +114,9 @@ void ray_tracer()
             zw = 0;
 
             l = sqrtl(
-                    powl((xw - ojo->vertice->x), 2) + 
-                    powl((yw - ojo->vertice->y), 2) +
-                    powl((zw - ojo->vertice->z), 2)
+                powl((xw - ojo->vertice->x), 2) +
+                powl((yw - ojo->vertice->y), 2) +
+                powl((zw - ojo->vertice->z), 2)
                 );
 
             director = init_vertice_struct(
