@@ -71,6 +71,12 @@ struct Ambiente
     long double iluminacion;
 };
 
+typedef struct Interseca
+{
+    long double tmin;
+    int tipo;
+    void * figura;
+} Interseca;
 
 struct Color{
     double r;

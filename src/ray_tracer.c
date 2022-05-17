@@ -2,13 +2,7 @@
 #include "include/dibujar.h"
 #include "include/estructuras.h"
 #include "include/tipo_figura.h"
-
-typedef struct Interseca
-{
-    long double tmin;
-    int tipo;
-    void * figura;
-} Interseca;
+#include "include/vector_normal_figura.h"
 
 Interseca * interseccion_esfera(Esfera *esfera, Vertice *d)
 {
@@ -65,6 +59,43 @@ Interseca * interseccion_esfera(Esfera *esfera, Vertice *d)
     return NULL;
 }
 
+void reflexion_difusa(Interseca * interseccion,Vertice * a, Vertice * d){
+    long double intensidad;
+    Interseca *interseccion = NULL,
+              *tmp = NULL;
+    Vertice * figura_normal,
+            * dir_luz;
+
+    figura_normal=vector_normal_figura((void *)interseccion,interseccion->tipo,a,d);
+
+    Foco * iter = lista_focos;
+
+    while(iter != NULL){
+        dir_luz = vector_normal_L((void *)iter,FOCO,a,d);
+        
+        Figura *iter = lista_figuras;
+        do
+        {
+            if (iter->tipo == ESFERA)
+            {
+                tmp = interseccion_esfera((Esfera *)iter->figura, d);
+            }
+
+            if (tmp > 0 /*EPSILON*/)
+            {
+                /*luz en cero*/
+            }
+            else{
+                /*misma formula pero luz no en cero*/
+            }
+
+            iter=iter->sig;
+        } while (iter != lista_figuras);
+
+        iter = iter->sig;
+    }
+}
+
 Color * first_intersection(Vertice * a, Vertice * d)
 {
     Figura *iter = lista_figuras;
@@ -93,9 +124,11 @@ Color * first_intersection(Vertice * a, Vertice * d)
         iter=iter->sig;
     } while (iter != lista_figuras);
 
-    if(interseccion!=NULL)
+    if(interseccion!=NULL){
+        reflexion_difusa(interseccion,a,d);
         if(interseccion->tipo==ESFERA)
             return ((Esfera *) interseccion->figura)->color;
+    }
     return background_color;
 }
 
