@@ -88,9 +88,9 @@ long double reflexion_difusa(Interseca * interseccion,Vertice * a, Vertice * d){
         dir_luz = vector_normal_L(iter,interseccion);
 
 
-        long double lambert=cosl(dir_luz->x*figura_normal->x+
+        long double lambert=dir_luz->x*figura_normal->x+
                             dir_luz->y*figura_normal->y+
-                            dir_luz->z*figura_normal->z);
+                            dir_luz->z*figura_normal->z;
         
         if(lambert>1)
             lambert=1;
@@ -102,7 +102,7 @@ long double reflexion_difusa(Interseca * interseccion,Vertice * a, Vertice * d){
             {
                 if (iter_figuras->tipo == ESFERA)
                 {
-                    tmp = interseccion_esfera((Esfera *)iter_figuras->figura,dir_luz,interseccion->interseccion);
+                    tmp = interseccion_esfera((Esfera *)iter_figuras->figura,interseccion->interseccion,dir_luz);
                 }
                 if (tmp != NULL)
                 {
@@ -112,10 +112,10 @@ long double reflexion_difusa(Interseca * interseccion,Vertice * a, Vertice * d){
 
                     long double dis=sqrtl(powl(tx,2)+powl(ty,2)+powl(tz,2));
 
-                    printf("DISTANCIA>>%Lf\n",dis);
+                    //printf("DISTANCIA>>%Lf\n",dis);
 
                     if(dis>EPSILON){
-                        //ignorar_luz=true;
+                        ignorar_luz=true;
                     }
                 }
 
@@ -125,7 +125,7 @@ long double reflexion_difusa(Interseca * interseccion,Vertice * a, Vertice * d){
         }
 
         if(!ignorar_luz){
-            intensidad+=((1-lambert)*(1)*(iter->intensidad));
+            intensidad+=(lambert*(1)*(iter->intensidad));
             ignorar_luz=false;
         }
         else{
