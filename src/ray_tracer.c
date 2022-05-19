@@ -114,7 +114,7 @@ long double reflexion_difusa(Interseca * interseccion,Vertice * a, Vertice * d){
 
                     //printf("DISTANCIA>>%Lf\n",dis);
 
-                    if(dis>EPSILON){
+                    if(tmp->tmin > EPSILON){
                         ignorar_luz=true;
                     }
                 }
@@ -172,7 +172,7 @@ Color * first_intersection(Vertice * a, Vertice * d)
                                     ((Esfera *) interseccion->figura)->color->g*intensidad,
                                     ((Esfera *) interseccion->figura)->color->b*intensidad);
     }
-    return background_color;
+    return init_color_struct(background_color->r,background_color->g,background_color->b);
 }
 
 void ray_tracer()
@@ -203,7 +203,7 @@ void ray_tracer()
 
             color=first_intersection(ojo->vertice, director);
             buffer[i][j]=(Color)*color;
-            //free(color);
+            free(color);
         }
         free(director);
     }
