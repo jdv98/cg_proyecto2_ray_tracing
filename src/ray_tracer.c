@@ -4,7 +4,17 @@
 #include "include/tipo_figura.h"
 #include "include/vector_normal_figura.h"
 
-Interseca * interseccion_esfera(Esfera *esfera, Vertice *d)
+long double EPSILON=0.0005;
+
+void vertice_interseccion(Interseca * interseccion,Vertice * a, Vertice * d){
+    long double nx=(a->x+(interseccion->tmin*d->x)),
+                ny=(a->y+(interseccion->tmin*d->y)),
+                nz=(a->z+(interseccion->tmin*d->z));
+    
+    interseccion->interseccion=init_vertice_struct(nx,ny,nz);
+}
+
+Interseca * interseccion_esfera(Esfera *esfera, Vertice * origen, Vertice *d)
 {
     Interseca * a = malloc(sizeof(Interseca));
     a->tipo=ESFERA;
@@ -12,12 +22,12 @@ Interseca * interseccion_esfera(Esfera *esfera, Vertice *d)
 
     long double
         alpha = powl(d->x,2)+powl(d->y,2)+powl(d->z,2),
-        beta = ((long double)2) * ((d->x * (ojo->vertice->x - esfera->vertice->x)) +
-                                   (d->y * (ojo->vertice->y - esfera->vertice->y)) +
-                                   (d->z * (ojo->vertice->z - esfera->vertice->z))),
-        gamma = powl(ojo->vertice->x - esfera->vertice->x, 2) +
-                powl(ojo->vertice->y - esfera->vertice->y, 2) +
-                powl(ojo->vertice->z - esfera->vertice->z, 2) -
+        beta = ((long double)2) * ((d->x * (origen->x - esfera->vertice->x)) +
+                                   (d->y * (origen->y - esfera->vertice->y)) +
+                                   (d->z * (origen->z - esfera->vertice->z))),
+        gamma = powl(origen->x - esfera->vertice->x, 2) +
+                powl(origen->y - esfera->vertice->y, 2) +
+                powl(origen->z - esfera->vertice->z, 2) -
                 powl(esfera->radio, 2),
         t1,
         t2;
@@ -43,14 +53,18 @@ Interseca * interseccion_esfera(Esfera *esfera, Vertice *d)
                 a->tmin = t2;
             else
                 a->tmin = t1;
+
+            vertice_interseccion(a,origen,d);
             return a;
         }
         else if(t1>0){
             a->tmin = t1;
+            vertice_interseccion(a,origen,d);
             return a;
         }
         else{
             a->tmin = t2;
+            vertice_interseccion(a,origen,d);
             return a;
         }
     }
@@ -59,41 +73,68 @@ Interseca * interseccion_esfera(Esfera *esfera, Vertice *d)
     return NULL;
 }
 
-void reflexion_difusa(Interseca * interseccion,Vertice * a, Vertice * d){
-    long double intensidad;
-    Interseca *interseccion = NULL,
-              *tmp = NULL;
+long double reflexion_difusa(Interseca * interseccion,Vertice * a, Vertice * d){
+    long double intensidad=0.0;
+    bool ignorar_luz=false;
+    Interseca *tmp = NULL;
     Vertice * figura_normal,
             * dir_luz;
 
-    figura_normal=vector_normal_figura((void *)interseccion,interseccion->tipo,a,d);
+    figura_normal=vector_normal_figura(interseccion,interseccion->tipo);
 
     Foco * iter = lista_focos;
 
     while(iter != NULL){
-        dir_luz = vector_normal_L((void *)iter,FOCO,a,d);
+        dir_luz = vector_normal_L(iter,interseccion);
+
+
+        long double lambert=cosl(dir_luz->x*figura_normal->x+
+                            dir_luz->y*figura_normal->y+
+                            dir_luz->z*figura_normal->z);
         
-        Figura *iter = lista_figuras;
-        do
-        {
-            if (iter->tipo == ESFERA)
-            {
-                tmp = interseccion_esfera((Esfera *)iter->figura, d);
-            }
+        if(lambert>1)
+            lambert=1;
+        
+        Figura *iter_figuras = lista_figuras;
 
-            if (tmp > 0 /*EPSILON*/)
+        if(lambert>0){
+            do
             {
-                /*luz en cero*/
-            }
-            else{
-                /*misma formula pero luz no en cero*/
-            }
+                if (iter_figuras->tipo == ESFERA)
+                {
+                    tmp = interseccion_esfera((Esfera *)iter_figuras->figura,dir_luz,interseccion->interseccion);
+                }
+                if (tmp != NULL)
+                {
+                    long double tx=tmp->interseccion->x-interseccion->interseccion->x,
+                                ty=tmp->interseccion->y-interseccion->interseccion->y,
+                                tz=tmp->interseccion->z-interseccion->interseccion->z;
 
-            iter=iter->sig;
-        } while (iter != lista_figuras);
+                    long double dis=sqrtl(powl(tx,2)+powl(ty,2)+powl(tz,2));
+
+                    printf("DISTANCIA>>%Lf\n",dis);
+
+                    if(dis>EPSILON){
+                        //ignorar_luz=true;
+                    }
+                }
+
+                iter_figuras=iter_figuras->sig;
+            } while (iter_figuras != lista_figuras);
+
+        }
+
+        if(!ignorar_luz){
+            intensidad+=((1-lambert)*(1)*(iter->intensidad));
+            ignorar_luz=false;
+        }
+        else{
+            ignorar_luz=false;
+        }
 
         iter = iter->sig;
     }
+    return intensidad;
 }
 
 Color * first_intersection(Vertice * a, Vertice * d)
@@ -106,7 +147,7 @@ Color * first_intersection(Vertice * a, Vertice * d)
     {
         if (iter->tipo == ESFERA)
         {
-            tmp = interseccion_esfera((Esfera *)iter->figura, d);
+            tmp = interseccion_esfera((Esfera *)iter->figura,a, d);
         }
 
         if (tmp != NULL)
@@ -125,9 +166,11 @@ Color * first_intersection(Vertice * a, Vertice * d)
     } while (iter != lista_figuras);
 
     if(interseccion!=NULL){
-        reflexion_difusa(interseccion,a,d);
+        long double intensidad=reflexion_difusa(interseccion,a,d);
         if(interseccion->tipo==ESFERA)
-            return ((Esfera *) interseccion->figura)->color;
+            return init_color_struct(((Esfera *) interseccion->figura)->color->r*intensidad,
+                                    ((Esfera *) interseccion->figura)->color->g*intensidad,
+                                    ((Esfera *) interseccion->figura)->color->b*intensidad);
     }
     return background_color;
 }
@@ -136,6 +179,7 @@ void ray_tracer()
 {
     long double xw, yw, zw, l;
     Vertice *director;
+    Color * color;
 
     for (int i = 0; i < RESOLUCION_W; i++)
     {
@@ -157,7 +201,9 @@ void ray_tracer()
                 (yw - ojo->vertice->y) / l,
                 (zw - ojo->vertice->z) / l);
 
-            buffer[i][j]=(Color)*first_intersection(ojo->vertice, director);
+            color=first_intersection(ojo->vertice, director);
+            buffer[i][j]=(Color)*color;
+            //free(color);
         }
         free(director);
     }

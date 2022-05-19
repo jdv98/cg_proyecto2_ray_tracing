@@ -42,7 +42,7 @@ Foco * init_foco_struct(long double intensidad, Vertice * vertice){
         intensidad=1;
 
     foco->intensidad=intensidad;
-    foco->vertice;
+    foco->vertice=vertice;
 
     return foco;
 }
@@ -131,8 +131,9 @@ void agregar_figura(void *figura, int tipo_figura, long double * iluminacion)
     if (lista_figuras == NULL)
     {
         lista_figuras = figura_nueva;
+        figura_nueva->sig=lista_figuras;
     }
-    else if (lista_figuras->sig == NULL)
+    else if (lista_figuras->sig == lista_figuras)
     {
         lista_figuras->sig = figura_nueva;
         lista_figuras->ant = figura_nueva;

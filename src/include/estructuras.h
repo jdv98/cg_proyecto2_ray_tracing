@@ -74,9 +74,15 @@ struct Ambiente
 typedef struct Interseca
 {
     long double tmin;
+    Vertice * interseccion; 
     int tipo;
-    void * figura;
+    Figura * figura;
 } Interseca;
+
+typedef struct Vector{
+    Vertice * a;
+    Vertice * b;
+} Vector;
 
 struct Color{
     double r;
