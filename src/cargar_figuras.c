@@ -3,6 +3,7 @@
 #include "include/cargar_figuras.h"
 #include "include/estructuras.h"
 #include <malloc.h>
+#include <string.h>
 
 long double leer_numero();
 
@@ -27,11 +28,10 @@ void remove_all_chars(char* str, int * size, char * c, int size_c) {
         } 
         if(conservar)
             pw +=1;
-        else
-            (*size)--;
     }
 
     *pw = '\0';
+    (*size)=strlen(str);
 }
 
 long double * leer_iluminacion_figura(){

@@ -1,5 +1,6 @@
 #include "include/main.h"
 #include "include/ray_tracer.h"
+#include "include/escritura.h"
 
 Color **buffer;
 Color * background_color;
@@ -26,6 +27,7 @@ int main(int argc, char **argv)
   init_background(0.1,0.1,0.1);
   cargar_figura(filename);
   ray_tracer();
+  guardar_imagen();
 
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
