@@ -163,7 +163,7 @@ Color * de_Que_Color (Interseca * interseccion, Vertice * a, Vertice * d)
         return init_color_struct (background_color->r,background_color->g,background_color->b);
     
     long double intensidad = intensidad_In (interseccion, a, d);
-    if (intensidad==0) intensidad = 0.1;
+    if (intensidad==0) intensidad = 0.2;
     if(interseccion->tipo == ESFERA)
         return init_color_struct(((Esfera *) interseccion->figura)->color->r*intensidad,
                                   ((Esfera *) interseccion->figura)->color->g*intensidad,
