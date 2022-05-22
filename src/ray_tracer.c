@@ -4,7 +4,7 @@
 #include "include/tipo_figura.h"
 #include "include/vector_normal_figura.h"
 
-long double EPSILON=0.0005;
+long double EPSILON=0.00000000005;
 
 void vertice_interseccion(Interseca * interseccion,Vertice * a, Vertice * d){
     long double nx=(a->x+(interseccion->tmin*d->x)),
@@ -88,11 +88,10 @@ long double reflexion_difusa (Interseca * interseccion,Vertice * a, Vertice * d)
         long double lambert=dir_luz->x*figura_normal->x+
                             dir_luz->y*figura_normal->y+
                             dir_luz->z*figura_normal->z;
-        if(lambert>1) lambert=1;
         
         Figura *iter_figuras = lista_figuras;
 
-        if(lambert > 0){
+        if(lambert > 0 && lambert <= 1){
             do
             {
                 if (iter_figuras->tipo == ESFERA)
@@ -105,14 +104,10 @@ long double reflexion_difusa (Interseca * interseccion,Vertice * a, Vertice * d)
                 }
                 iter_figuras=iter_figuras->sig;
             } while (iter_figuras != lista_figuras);
-        }
-        
-        if(!ignorar_luz) {
 
-            intensidad+=(lambert*obtener_kd_figura(interseccion->figura, interseccion->tipo)*(iter->intensidad));
-            ignorar_luz=false;
-            
-        } else {
+            if(!ignorar_luz) {
+                intensidad+=(lambert*obtener_kd_figura(interseccion->figura, interseccion->tipo)*(iter->intensidad));
+            }
             ignorar_luz=false;
         }
         iter = iter->sig;
