@@ -73,16 +73,7 @@ Interseca * interseccion_esfera(Esfera *esfera, Vertice * origen, Vertice *d)
     return NULL;
 }
 
-//No estoy muy seguro de si esta funcion puede ser util tomando en cuenta que la distancia minima esta dada por tmin.
-long double distancia (Interseca * interseccion, Interseca * temporal)
-{
-    long double tx = temporal->interseccion->x-interseccion->interseccion->x,
-                ty = temporal->interseccion->y-interseccion->interseccion->y,
-                tz = temporal->interseccion->z-interseccion->interseccion->z;
-    return sqrtl(powl(tx,2)+powl(ty,2)+powl(tz,2));
-}
-
-long double intensidad_In (Interseca * interseccion,Vertice * a, Vertice * d){
+long double reflexion_difusa (Interseca * interseccion,Vertice * a, Vertice * d){
     long double intensidad=0.0;
     bool ignorar_luz=false;
     Interseca *tmp = NULL;
@@ -107,11 +98,10 @@ long double intensidad_In (Interseca * interseccion,Vertice * a, Vertice * d){
                 if (iter_figuras->tipo == ESFERA)
                 {
                     tmp = interseccion_esfera((Esfera *)iter_figuras->figura,interseccion->interseccion,dir_luz);
-                    
-                //Se puede usar tmin en lugar de  dis porque ya deporsi tmin es la distancia minima.
-                    if (tmp != NULL && tmp->tmin > EPSILON) {
+                
+                    if (tmp != NULL && tmp->tmin > EPSILON) 
                         ignorar_luz=true;
-                    }
+                    
                 }
                 iter_figuras=iter_figuras->sig;
             } while (iter_figuras != lista_figuras);
@@ -128,8 +118,21 @@ long double intensidad_In (Interseca * interseccion,Vertice * a, Vertice * d){
     return intensidad;
 }
 
-//Bueno la verdad es que a esta funcion le encaja mejor el nombre de fist_Interseccion.
-Interseca * buscar_Interseccion_Esfera (Vertice * a, Vertice * d)
+Color * de_que_color (Interseca * interseccion, Vertice * a, Vertice * d)
+{
+    if (interseccion == NULL) 
+        return init_color_struct (background_color->r,background_color->g,background_color->b);
+
+    long double intensidad = reflexion_difusa (interseccion, a, d);
+    //printf ("Inetensidad >> %Lf \n",intensidad);
+    if (intensidad == 0) intensidad = 0.2;
+    if(interseccion->tipo == ESFERA)
+        return init_color_struct(((Esfera *) interseccion->figura)->color->r*intensidad,
+                                  ((Esfera *) interseccion->figura)->color->g*intensidad,
+                                  ((Esfera *) interseccion->figura)->color->b*intensidad);
+}
+
+Color * first_intersection (Vertice * a, Vertice * d)
 {
     Figura *iter = lista_figuras;
     Interseca   *interseccion = NULL,
@@ -154,26 +157,8 @@ Interseca * buscar_Interseccion_Esfera (Vertice * a, Vertice * d)
 
         iter=iter->sig;
     } while (iter != lista_figuras);
-    return interseccion;
-}
 
-Color * de_Que_Color (Interseca * interseccion, Vertice * a, Vertice * d)
-{
-    if (interseccion == NULL) 
-        return init_color_struct (background_color->r,background_color->g,background_color->b);
-    
-    long double intensidad = intensidad_In (interseccion, a, d);
-    if (intensidad==0) intensidad = 0.2;
-    if(interseccion->tipo == ESFERA)
-        return init_color_struct(((Esfera *) interseccion->figura)->color->r*intensidad,
-                                  ((Esfera *) interseccion->figura)->color->g*intensidad,
-                                  ((Esfera *) interseccion->figura)->color->b*intensidad);
-}
-
-Color * first_intersection (Vertice * a, Vertice * d)
-{
-    Interseca *interseccion = buscar_Interseccion_Esfera (a, d);
-    return de_Que_Color (interseccion, a, d);
+    return de_que_color (interseccion, a, d);
 }
 
 void ray_tracer()
