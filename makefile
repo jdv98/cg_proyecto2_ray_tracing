@@ -9,7 +9,9 @@ FILES = main keys\
 	cargar_figuras\
 	estructuras\
 	ray_tracer\
-	escritura
+	escritura\
+	vector_normal_figura
+
 OBJECTS=$(patsubst %, $(OBJ_DIR)/%.o, $(FILES))
 OUTPUT=$(BIN_DIR)/main
 

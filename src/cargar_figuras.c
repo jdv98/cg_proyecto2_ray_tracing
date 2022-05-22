@@ -171,25 +171,27 @@ void leer_frame(){
 
 void leer_poligono()
 {
-    Poligono * poligono = init_poligono_struct(leer_color());
+    Color * color = leer_color();
     inc_iter_if_cmp(',');
-    long double * ilu = leer_iluminacion_figura();
+    long double * iluminacion=leer_iluminacion_figura();
+    Poligono * poligono = init_poligono_struct(leer_color(), iluminacion);
     inc_iter_if_cmp(',');
+
     leer_caras(poligono);
-    agregar_figura(poligono,POLIGONO,ilu);
+    agregar_figura(poligono,POLIGONO);
 }
 
 void leer_esfera()
 {
     Color * color = leer_color();
     inc_iter_if_cmp(',');
-    long double * ilu = leer_iluminacion_figura();
+    long double * iluminacion=leer_iluminacion_figura();    
     inc_iter_if_cmp(',');
     Vertice * vertice = leer_vertice();
     inc_iter_if_cmp(',');
     long double radio=leer_numero();
 
-    agregar_figura(init_esfera_struct(color,radio,vertice),ESFERA,ilu);
+    agregar_figura(init_esfera_struct(color,radio,vertice,iluminacion),ESFERA);
 }
 
 void leer_foco(){

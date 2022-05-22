@@ -42,7 +42,7 @@ Foco * init_foco_struct(long double intensidad, Vertice * vertice){
         intensidad=1;
 
     foco->intensidad=intensidad;
-    foco->vertice;
+    foco->vertice=vertice;
 
     return foco;
 }
@@ -68,21 +68,35 @@ Cara *init_cara_struct()
     return cara;
 }
 
-Esfera *init_esfera_struct(Color *color, long double radio, Vertice *vertice)
+Esfera *init_esfera_struct(Color *color, long double radio, Vertice *vertice, long double * iluminacion)
 {
     Esfera *esfera = malloc(sizeof(Esfera));
     esfera->color = color;
+
+    /***/
+    esfera->k_d = iluminacion[0];
+    esfera->k_a = iluminacion[1];
+    free(iluminacion);
+    /***/
+
     esfera->radio = radio;
     esfera->vertice = vertice;
     return esfera;
 }
 
-Poligono *init_poligono_struct(Color *color)
+Poligono *init_poligono_struct(Color *color, long double * iluminacion)
 {
     Poligono *poligono = malloc(sizeof(Poligono));
     poligono->cant_caras = 0;
     poligono->caras = malloc(0);
     poligono->color = color;
+
+    /***/
+    poligono->k_d = iluminacion[0];
+    poligono->k_a = iluminacion[1];
+    free(iluminacion);
+    /***/
+
     return poligono;
 }
 
@@ -113,17 +127,11 @@ void ins_cara_poligono(Poligono *poligono, Cara *cara)
     poligono->caras[poligono->cant_caras - 1] = cara;
 }
 
-void agregar_figura(void *figura, int tipo_figura, long double * iluminacion)
+void agregar_figura(void *figura, int tipo_figura)
 {
     Figura *figura_nueva = malloc(sizeof(Figura));
     figura_nueva->figura = figura;
     figura_nueva->tipo = tipo_figura;
-    
-    /***/
-    figura_nueva->k_d=iluminacion[0];
-    figura_nueva->k_a=iluminacion[1];
-    free(iluminacion);
-    /***/
 
     figura_nueva->ant = NULL;
     figura_nueva->sig = NULL;
@@ -131,8 +139,9 @@ void agregar_figura(void *figura, int tipo_figura, long double * iluminacion)
     if (lista_figuras == NULL)
     {
         lista_figuras = figura_nueva;
+        figura_nueva->sig=lista_figuras;
     }
-    else if (lista_figuras->sig == NULL)
+    else if (lista_figuras->sig == lista_figuras)
     {
         lista_figuras->sig = figura_nueva;
         lista_figuras->ant = figura_nueva;
@@ -260,4 +269,28 @@ void liberar_frame(){
     free(frame->bottom_left);
     free(frame->top_right);
     free(frame);
+}
+
+/*********************/
+/*Obtener informacion*/
+/*********************/
+
+long double obtener_kd_figura(void * figura, int tipo) {
+    if(tipo==ESFERA){
+        return ((Esfera*) figura)->k_d;
+    }
+    else if(tipo==POLIGONO){
+        return ((Poligono*) figura)->k_d;
+    }
+    return -1;
+}
+
+long double obtener_ka_figura(void * figura, int tipo) {
+    if(tipo==ESFERA){
+        return ((Esfera*) figura)->k_a;
+    }
+    else if(tipo==POLIGONO){
+        return ((Poligono*) figura)->k_a;
+    }
+    return -1;
 }
