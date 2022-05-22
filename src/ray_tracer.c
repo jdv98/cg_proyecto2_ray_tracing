@@ -62,7 +62,7 @@ Interseca * interseccion_esfera(Esfera *esfera, Vertice * origen, Vertice *d)
             vertice_interseccion(a,origen,d);
             return a;
         }
-        else{
+        else if(t2>0){
             a->tmin = t2;
             vertice_interseccion(a,origen,d);
             return a;
@@ -74,7 +74,8 @@ Interseca * interseccion_esfera(Esfera *esfera, Vertice * origen, Vertice *d)
 }
 
 long double reflexion_difusa (Interseca * interseccion,Vertice * a, Vertice * d){
-    long double intensidad=0.0;
+    long double intensidad=0.0,
+                tmax=0;
     bool ignorar_luz=false;
     Interseca *tmp = NULL;
     Vertice * figura_normal,
@@ -88,6 +89,8 @@ long double reflexion_difusa (Interseca * interseccion,Vertice * a, Vertice * d)
         long double lambert=dir_luz->x*figura_normal->x+
                             dir_luz->y*figura_normal->y+
                             dir_luz->z*figura_normal->z;
+
+        tmax=(iter->vertice->x - interseccion->interseccion->x)/dir_luz->x;
         
         Figura *iter_figuras = lista_figuras;
 
@@ -98,9 +101,8 @@ long double reflexion_difusa (Interseca * interseccion,Vertice * a, Vertice * d)
                 {
                     tmp = interseccion_esfera((Esfera *)iter_figuras->figura,interseccion->interseccion,dir_luz);
                 
-                    if (tmp != NULL && tmp->tmin > EPSILON) 
+                    if (tmp != NULL && tmp->tmin > EPSILON && tmp->tmin<tmax)
                         ignorar_luz=true;
-                    
                 }
                 iter_figuras=iter_figuras->sig;
             } while (iter_figuras != lista_figuras);
