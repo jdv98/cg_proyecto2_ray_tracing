@@ -171,17 +171,16 @@ void leer_frame(){
 
 void leer_poligono()
 {
-    Poligono * poligono = init_poligono_struct(leer_color());
+    Color * color = leer_color();
     inc_iter_if_cmp(',');
-    
-    //long double * ilu = leer_iluminacion_figura();
-    //long double kd=leer_numero();
-    //inc_iter_if_cmp(',');
-    //long double ka=leer_numero();
+    Vertice * kd=leer_vertice();
+    inc_iter_if_cmp(',');
+    long double ka=leer_numero();
 
+    Poligono * poligono = init_poligono_struct(leer_color(), kd, ka);
     inc_iter_if_cmp(',');
+
     leer_caras(poligono);
-    //agregar_figura(poligono,POLIGONO,ilu);
     agregar_figura(poligono,POLIGONO);
 }
 
@@ -189,18 +188,14 @@ void leer_esfera()
 {
     Color * color = leer_color();
     inc_iter_if_cmp(',');
-    
-    //long double * ilu = leer_iluminacion_figura();
     Vertice * kd=leer_vertice();
     inc_iter_if_cmp(',');
-    long double ka=leer_numero();
-    
+    long double ka=leer_numero();    
     inc_iter_if_cmp(',');
     Vertice * vertice = leer_vertice();
     inc_iter_if_cmp(',');
     long double radio=leer_numero();
 
-    //agregar_figura(init_esfera_struct(color,radio,vertice),ESFERA,ilu);
     agregar_figura(init_esfera_struct(color,radio,vertice,kd,ka),ESFERA);
 }
 
@@ -266,7 +261,6 @@ void cargar_figura(const char *filename)
     {
         leer_figura();
     }
-    printf ("CF >> \n");
 
     free(original);
     if(size==0)

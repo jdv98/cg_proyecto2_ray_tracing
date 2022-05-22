@@ -79,12 +79,14 @@ Esfera *init_esfera_struct(Color *color, long double radio, Vertice *vertice, Ve
     return esfera;
 }
 
-Poligono *init_poligono_struct(Color *color)
+Poligono *init_poligono_struct(Color *color, Vertice * kd, long double ka)
 {
     Poligono *poligono = malloc(sizeof(Poligono));
     poligono->cant_caras = 0;
     poligono->caras = malloc(0);
     poligono->color = color;
+    poligono->k_d = kd;
+    poligono->k_a = ka;
     return poligono;
 }
 
@@ -115,20 +117,11 @@ void ins_cara_poligono(Poligono *poligono, Cara *cara)
     poligono->caras[poligono->cant_caras - 1] = cara;
 }
 
-//void agregar_figura(void *figura, int tipo_figura, long double * iluminacion)
 void agregar_figura(void *figura, int tipo_figura)
 {
     Figura *figura_nueva = malloc(sizeof(Figura));
     figura_nueva->figura = figura;
     figura_nueva->tipo = tipo_figura;
-    
-    /***/
-    //figura_nueva->k_d=iluminacion[0];
-    //figura_nueva->k_a=iluminacion[1];
-    //figura_nueva->figura->k_d=iluminacion[0];
-    //figura_nueva->figura->k_a=iluminacion[1];
-    //free(iluminacion);
-    /***/
 
     figura_nueva->ant = NULL;
     figura_nueva->sig = NULL;
@@ -179,8 +172,7 @@ void agregar_foco(Foco * foco){
 void liberar_esfera(Esfera *esfera)
 {
     free(esfera->color);
-    //free(esfera->k_d);
-    //free(esfera->k_a);
+    free(esfera->k_d);
     free(esfera->vertice);
     free(esfera);
 }
@@ -203,6 +195,7 @@ void liberar_poligono(Poligono *poligono)
     }
     free(poligono->caras);
     free(poligono->color);
+    free(poligono->k_d);
     free(poligono);
 }
 

@@ -123,11 +123,11 @@ Color * de_que_color (Interseca * interseccion, Vertice * a, Vertice * d)
     if (interseccion == NULL) 
         return init_color_struct (background_color->r,background_color->g,background_color->b);
 
-    long double intensidad = reflexion_difusa (interseccion, a, d);
-    //printf ("Inetensidad >> %Lf \n",intensidad);
-    if (intensidad == 0) intensidad = 0.2;
+    long double intensidad = reflexion_difusa (interseccion, a, d) + ((Esfera *) interseccion->figura)->k_a;
+
+    //if (intensidad + ((Esfera *) interseccion->figura)->k_a >= 0) intensidad = 0.2;
     if(interseccion->tipo == ESFERA)
-        return init_color_struct(((Esfera *) interseccion->figura)->color->r*intensidad,
+        return init_color_struct (((Esfera *) interseccion->figura)->color->r*intensidad,
                                   ((Esfera *) interseccion->figura)->color->g*intensidad,
                                   ((Esfera *) interseccion->figura)->color->b*intensidad);
 }
