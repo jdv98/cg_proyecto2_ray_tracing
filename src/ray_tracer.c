@@ -106,10 +106,12 @@ long double reflexion_difusa (Interseca * interseccion,Vertice * a, Vertice * d)
                 iter_figuras=iter_figuras->sig;
             } while (iter_figuras != lista_figuras);
         }
-
+        
         if(!ignorar_luz) {
-            intensidad+=(lambert*(iter->intensidad));
+
+            intensidad+=(lambert*obtener_kd_figura(interseccion->figura, interseccion->tipo)*(iter->intensidad));
             ignorar_luz=false;
+            
         } else {
             ignorar_luz=false;
         }
@@ -123,9 +125,10 @@ Color * de_que_color (Interseca * interseccion, Vertice * a, Vertice * d)
     if (interseccion == NULL) 
         return init_color_struct (background_color->r,background_color->g,background_color->b);
 
-    long double intensidad = reflexion_difusa (interseccion, a, d) + ((Esfera *) interseccion->figura)->k_a;
+    long double intensidad = reflexion_difusa (interseccion, a, d);
 
-    //if (intensidad + ((Esfera *) interseccion->figura)->k_a >= 0) intensidad = 0.2;
+    intensidad+=(obtener_ka_figura(interseccion->figura, interseccion->tipo)*ambiente->iluminacion);
+    
     if(interseccion->tipo == ESFERA)
         return init_color_struct (((Esfera *) interseccion->figura)->color->r*intensidad,
                                   ((Esfera *) interseccion->figura)->color->g*intensidad,

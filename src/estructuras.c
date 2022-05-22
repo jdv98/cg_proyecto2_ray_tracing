@@ -270,3 +270,27 @@ void liberar_frame(){
     free(frame->top_right);
     free(frame);
 }
+
+/*********************/
+/*Obtener informacion*/
+/*********************/
+
+long double obtener_kd_figura(void * figura, int tipo) {
+    if(tipo==ESFERA){
+        return ((Esfera*) figura)->k_d;
+    }
+    else if(tipo==POLIGONO){
+        return ((Poligono*) figura)->k_d;
+    }
+    return -1;
+}
+
+long double obtener_ka_figura(void * figura, int tipo) {
+    if(tipo==ESFERA){
+        return ((Esfera*) figura)->k_a;
+    }
+    else if(tipo==POLIGONO){
+        return ((Poligono*) figura)->k_a;
+    }
+    return -1;
+}

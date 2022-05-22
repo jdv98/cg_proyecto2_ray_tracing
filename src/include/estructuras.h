@@ -127,4 +127,8 @@ void liberar_figura(int posicion);
 void liberar_figuras();
 void liberar_ojo();
 void liberar_frame();
+
+
+long double obtener_kd_figura(void * figura, int tipo);
+long double obtener_ka_figura(void * figura, int tipo);
 #endif
