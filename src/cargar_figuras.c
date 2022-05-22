@@ -173,11 +173,8 @@ void leer_poligono()
 {
     Color * color = leer_color();
     inc_iter_if_cmp(',');
-    Vertice * kd=leer_vertice();
-    inc_iter_if_cmp(',');
-    long double ka=leer_numero();
-
-    Poligono * poligono = init_poligono_struct(leer_color(), kd, ka);
+    long double * iluminacion=leer_iluminacion_figura();
+    Poligono * poligono = init_poligono_struct(leer_color(), iluminacion);
     inc_iter_if_cmp(',');
 
     leer_caras(poligono);
@@ -188,15 +185,13 @@ void leer_esfera()
 {
     Color * color = leer_color();
     inc_iter_if_cmp(',');
-    Vertice * kd=leer_vertice();
-    inc_iter_if_cmp(',');
-    long double ka=leer_numero();    
+    long double * iluminacion=leer_iluminacion_figura();    
     inc_iter_if_cmp(',');
     Vertice * vertice = leer_vertice();
     inc_iter_if_cmp(',');
     long double radio=leer_numero();
 
-    agregar_figura(init_esfera_struct(color,radio,vertice,kd,ka),ESFERA);
+    agregar_figura(init_esfera_struct(color,radio,vertice,iluminacion),ESFERA);
 }
 
 void leer_foco(){

@@ -28,7 +28,7 @@ struct Cara
 
 struct Esfera{
     Color * color;
-    Vertice * k_d; //Coeficiente de reflexion difusa
+    long double k_d; //Coeficiente de reflexion difusa
     long double k_a; //Coeficiente de iluminacion ambiente
     Vertice * vertice;
     long double radio;
@@ -36,7 +36,7 @@ struct Esfera{
 
 struct Poligono{
     Color * color;
-    Vertice * k_d; //Coeficiente de reflexion difusa
+    long double k_d; //Coeficiente de reflexion difusa
     long double k_a; //Coeficiente de iluminacion ambiente
     int cant_caras;
     Cara * * caras;
@@ -109,8 +109,8 @@ Foco * init_foco_struct(long double intensidad, Vertice * vertice);
 void init_ojo_struct(Vertice * vertice);
 void init_frame_struct(Vertice * bottom_left,Vertice * top_right);
 Cara * init_cara_struct();
-Esfera * init_esfera_struct (Color * color, long double radio, Vertice * vertice, Vertice * kd, long double ka);
-Poligono * init_poligono_struct(Color * color, Vertice * kd, long double ka);
+Esfera * init_esfera_struct (Color * color, long double radio, Vertice * vertice, long double * iluminacion);
+Poligono * init_poligono_struct(Color * color, long double * iluminacion);
 void init_ambiente_struct(long double iluminacion);
 
 
