@@ -64,6 +64,9 @@ struct Frame
 struct Foco
 {
     long double intensidad;
+    long double c1_f_att;
+    long double c2_f_att;
+    long double c3_f_att;
     Vertice * vertice;
     Foco * sig;
 };
@@ -105,7 +108,7 @@ extern Ambiente * ambiente;
 
 Color * init_color_struct(double r,double g,double b);
 Vertice * init_vertice_struct(long double x,long double y,long double z);
-Foco * init_foco_struct(long double intensidad, Vertice * vertice);
+Foco * init_foco_struct(long double * datos, Vertice * vertice);
 void init_ojo_struct(Vertice * vertice);
 void init_frame_struct(Vertice * bottom_left,Vertice * top_right);
 Cara * init_cara_struct();

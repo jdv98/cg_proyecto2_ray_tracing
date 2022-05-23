@@ -195,12 +195,32 @@ void leer_esfera()
 }
 
 void leer_foco(){
-    long double ip = leer_numero();
+    long double * datos = malloc(sizeof(long double)*4);
+
+    if (inc_iter_if_cmp('{'))
+    {
+        datos[0] = leer_numero();
+        if(!inc_iter_if_cmp(','))
+            error("foco");
+
+        datos[1] = leer_numero();
+        if(!inc_iter_if_cmp(','))
+            error("foco");
+        
+        datos[2] = leer_numero();
+        if(!inc_iter_if_cmp(','))
+            error("foco");
+        
+        datos[3] = leer_numero();
+    }
+    if (!inc_iter_if_cmp('}'))
+        error("foco");
+    
     if(!inc_iter_if_cmp(','))
         error("foco");
-    Vertice * vertice = leer_vertice();
 
-    agregar_foco(init_foco_struct(ip,vertice));
+    Vertice * vertice = leer_vertice();
+    agregar_foco(init_foco_struct(datos,vertice));
 }
 
 void leer_ambiente(){

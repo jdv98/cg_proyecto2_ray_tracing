@@ -9,6 +9,14 @@ Ojo *ojo;
 Frame *frame;
 Ambiente * ambiente;
 
+long double rango_cero_uno(long double numero){
+    if(numero<0)
+        return 0;
+    else if(numero>1)
+        return 1;
+    return numero;
+}
+
 Color *init_color_struct(double r, double g, double b)
 {
 
@@ -33,15 +41,15 @@ Vertice *init_vertice_struct(long double x, long double y, long double z)
     return vertice;
 }
 
-Foco * init_foco_struct(long double intensidad, Vertice * vertice){
+Foco * init_foco_struct(long double * datos, Vertice * vertice){
     Foco * foco = malloc(sizeof(Foco));
 
-    if(intensidad<0)
-        intensidad=0;
-    else if(intensidad>1)
-        intensidad=1;
+    foco->intensidad=rango_cero_uno(datos[0]);
+    foco->c1_f_att=rango_cero_uno(datos[1]);
+    foco->c2_f_att=rango_cero_uno(datos[2]);
+    foco->c3_f_att=rango_cero_uno(datos[3]);
+    free(datos);
 
-    foco->intensidad=intensidad;
     foco->vertice=vertice;
 
     return foco;

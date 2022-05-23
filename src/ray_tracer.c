@@ -6,6 +6,22 @@
 
 long double EPSILON=0.00000000005;
 
+long double fatt_distancia_luz(Foco * foco, Vertice * a){
+    long double distancia = sqrtl(
+        powl( a->x - foco->vertice->x , 2 ) +
+        powl( a->y - foco->vertice->y , 2 ) +
+        powl( a->z - foco->vertice->z , 2 )
+    );
+
+    long double f_att=1/(
+        foco->c1_f_att +
+        foco->c2_f_att * distancia +
+        foco->c3_f_att * powl(distancia , 2)
+        );
+
+    return f_att > 1 ? 1 : f_att;
+}
+
 void vertice_interseccion(Interseca * interseccion,Vertice * a, Vertice * d){
     long double nx=(a->x+(interseccion->tmin*d->x)),
                 ny=(a->y+(interseccion->tmin*d->y)),
@@ -108,7 +124,13 @@ long double reflexion_difusa (Interseca * interseccion,Vertice * a, Vertice * d)
             } while (iter_figuras != lista_figuras);
 
             if(!ignorar_luz) {
-                intensidad+=(lambert*obtener_kd_figura(interseccion->figura, interseccion->tipo)*(iter->intensidad));
+                intensidad+=
+                    (
+                        lambert*
+                        obtener_kd_figura(interseccion->figura, interseccion->tipo)*
+                        (iter->intensidad)*
+                        fatt_distancia_luz(iter, interseccion->interseccion)
+                    );
             }
             ignorar_luz=false;
         }

@@ -17,7 +17,7 @@
 /FOCO/
 {
     0,
-    </code>I<sub>P</sub><code>,
+    {</code>I<sub>P</sub><code>, </code>C<sub>1</sub><code>, </code>C<sub>2</sub><code>, </code>C<sub>3</sub><code>},
     {X, Y, Z}
 }
 
@@ -42,7 +42,8 @@
     1,
     {R, G, B},
     {</code>K<sub>D</sub><code>, </code>K<sub>A</sub><code>},
-    {X, Y, Z}
+    {X, Y, Z},
+    Radio
 }
 
 
@@ -65,7 +66,8 @@
         .
         .
         .
-    }
+    },
+    Radio
 }
 </code>
 </pre>
