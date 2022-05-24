@@ -38,7 +38,7 @@ int main(int argc, char **argv)
   char * nombre_imagen = malloc(sizeof(char)*(strlen(nombre_escenario)+strlen(tipo_imagen)));
   sprintf(nombre_imagen, "%s.%s", nombre_escenario,tipo_imagen);
 
-  const char * filename = malloc(sizeof(char)*(strlen(nombre_escenario)+14));
+  char * filename = malloc(sizeof(char)*(strlen(nombre_escenario)+14));
   sprintf(filename, "archivos/%s.txt", nombre_escenario);
 
   init_buffer();
@@ -46,6 +46,11 @@ int main(int argc, char **argv)
   cargar_figura(filename);
   ray_tracer();
   guardar_imagen(nombre_imagen);
+
+  free(filename);
+  free(nombre_imagen);
+  
+  return 0;
 }
 
 void init_buffer(){

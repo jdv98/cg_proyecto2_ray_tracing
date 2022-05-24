@@ -3,6 +3,7 @@
 #include "include/estructuras.h"
 #include "include/tipo_figura.h"
 #include "include/vector_normal_figura.h"
+#include <stdio.h>
 
 long double EPSILON=0.00000000005;
 
