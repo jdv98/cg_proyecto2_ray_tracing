@@ -214,5 +214,13 @@ void ray_tracer()
             free(color);
         }
         free(director);
+        if((int)(((long double)100/RESOLUCION_W)*i)%10==0){
+            system("clear");
+            printf("Ray tracer > %i%\n",(int)(((long double)100/RESOLUCION_W)*i));
+        }
+    }
+    {
+        system("clear");
+        printf("Ray tracer > %i%\n",100);
     }
 }

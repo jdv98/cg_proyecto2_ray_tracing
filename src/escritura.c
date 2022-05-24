@@ -1,8 +1,7 @@
 #include "include/escritura.h"
 #include "include/dibujar.h"
 
-void guardar_imagen(){
-    char * nombre="imagen.jpg";
+void guardar_imagen(char * nombre){
     size_t number_wands = 0;
     PixelIterator * pixel_iterator;
 
@@ -39,6 +38,9 @@ void escribir_imagen(MagickWand *magick_wand, PixelIterator * pixel_iterator, si
     PixelResetIterator(pixel_iterator);
     PixelWand ** pixel_wand_row = PixelGetCurrentIteratorRow(pixel_iterator, &number_wands);
     int row = MagickGetImageHeight(magick_wand)-1;
+    int total = MagickGetImageHeight(magick_wand)-1;
+    
+
     do
     {
 
@@ -50,6 +52,12 @@ void escribir_imagen(MagickWand *magick_wand, PixelIterator * pixel_iterator, si
             PixelSyncIterator(pixel_iterator);
         }
         pixel_wand_row = PixelGetNextIteratorRow(pixel_iterator, &number_wands);
+
+        if((int)(((double)100/total)*(double)row)%10==0){
+            system("clear");
+            printf("Guardando imagen > %i%\n",100-(int)(((double)100/total)*(double)row));
+        }
+
         row--;
     } while (number_wands > 0);
 }

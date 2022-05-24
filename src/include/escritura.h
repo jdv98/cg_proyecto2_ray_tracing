@@ -18,7 +18,7 @@
   exit(-1); \
 }
 
-void guardar_imagen();
+void guardar_imagen(char * nombre);
 void escribir_imagen(MagickWand *magick_wand, PixelIterator * pixel_iterator, size_t number_wands);
 
 

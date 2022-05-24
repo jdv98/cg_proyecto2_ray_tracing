@@ -57,4 +57,6 @@ bin/
 
 # vscode
 .vscode
-imagen.jpg
+*.jpg
+*.avs
+*.png

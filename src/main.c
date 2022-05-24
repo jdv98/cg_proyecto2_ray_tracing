@@ -1,12 +1,12 @@
 #include "include/main.h"
 #include "include/ray_tracer.h"
 #include "include/escritura.h"
+#include <string.h>
 
 Color **buffer;
 Color * background_color;
 int RESOLUCION_H,RESOLUCION_W;
 
-void draw_scene();
 void init_buffer();
 void init_background(double r, double g, double b);
 
@@ -15,50 +15,37 @@ int main(int argc, char **argv)
 
   RESOLUCION_W = 1008;
   RESOLUCION_H = 567;
+  char * nombre_escenario="escenario";
+  char * tipo_imagen = "avs";
 
-  const char *filename = "archivos/figuras.txt";
-  if (argc == 3)
-  {
-    RESOLUCION_W = atoi(argv[1]);
-    RESOLUCION_H = atoi(argv[2]);
+  if(argc == 2){
+    nombre_escenario=argv[1];
   }
+  else if (argc == 3)
+  {
+    nombre_escenario=argv[1];
+    tipo_imagen =argv[2];
+  }
+  else if (argc == 5)
+  {
+    nombre_escenario=argv[1];
+    tipo_imagen=argv[2];
+    RESOLUCION_W = atoi(argv[3]);
+    RESOLUCION_H = atoi(argv[4]);
+  }
+
+  
+  char * nombre_imagen = malloc(sizeof(char)*(strlen(nombre_escenario)+strlen(tipo_imagen)));
+  sprintf(nombre_imagen, "%s.%s", nombre_escenario,tipo_imagen);
+
+  const char * filename = malloc(sizeof(char)*(strlen(nombre_escenario)+14));
+  sprintf(filename, "archivos/%s.txt", nombre_escenario);
 
   init_buffer();
   init_background(0.1,0.1,0.1);
   cargar_figura(filename);
   ray_tracer();
-  guardar_imagen();
-
-  glutInit(&argc, argv);
-  glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-  glutInitWindowSize(RESOLUCION_W, RESOLUCION_H);
-  glutCreateWindow("Proyecto 2 - Ray tracing");
-  glClear(GL_COLOR_BUFFER_BIT);
-  gluOrtho2D(0, RESOLUCION_W, 0, RESOLUCION_H);
-  glutSetKeyRepeat(GLUT_KEY_REPEAT_OFF);
-  glutDisplayFunc(draw_scene);
-  glutKeyboardFunc(normal_keys);
-  glutKeyboardUpFunc(normal_keys_up);
-  glutSpecialFunc(special_keys);
-  glutSpecialUpFunc(special_keys_up);
-  glutMainLoop();
-}
-
-void draw_scene()
-{
-  int i, j;
-  
-  glBegin(GL_POINTS);
-  for (i = 0; i < RESOLUCION_W; i++)
-  {
-    for (j = 0; j < RESOLUCION_H; j++)
-    {
-      glColor3f(buffer[i][j].r, buffer[i][j].g, buffer[i][j].b);
-      glVertex2i(i, j);
-    }
-  }
-  glEnd();
-  glFlush();
+  guardar_imagen(nombre_imagen);
 }
 
 void init_buffer(){

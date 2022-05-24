@@ -4,7 +4,7 @@ BIN_DIR=bin
 SRC_DIR=src
 
 #Archivos
-FILES = main keys\
+FILES = main\
 	read_file\
 	cargar_figuras\
 	estructuras\
@@ -16,9 +16,9 @@ OBJECTS=$(patsubst %, $(OBJ_DIR)/%.o, $(FILES))
 OUTPUT=$(BIN_DIR)/main
 
 ######
-CFLAGS=-I/usr/local/Mesa-3.4/include `pkg-config --cflags MagickWand`
-LDLIBS=-lX11 -lglut -lGLU -lGL -lm -lXext -lXmu -lpthread `pkg-config --libs MagickWand`
-LDFLAGS=-L/usr/local/Mesa-3.4/lib -L/usr/X11R6/lib
+CFLAGS=`pkg-config --cflags MagickWand`
+LDLIBS=-lm `pkg-config --libs MagickWand`
+LDFLAGS=
 
 ######
 $(OUTPUT): $(OBJECTS)
@@ -33,10 +33,10 @@ $(OBJ_DIR)/%.o : $(SRC_DIR)/%.c
 -include $(OBJ_DIR)/*.d
 
 run: $(OUTPUT)
-	./$(OUTPUT) $(w) $(h)
+	./$(OUTPUT) $(i) $(t) $(w) $(h)
 
 valgrind: $(OUTPUT)
-	valgrind -s ./$(OUTPUT) $(w) $(h)
+	valgrind -s ./$(OUTPUT) $(i) $(t) $(w) $(h)
 
 clean:
 	rm -rf $(BIN_DIR) $(OBJ_DIR)
