@@ -1,5 +1,29 @@
 # cg_proyecto2_ray_tracing
 
+# Uso
+
+Por defecto la aplicación si se corre sin ningún parámetro, esta usará el archivo escenario.txt dentro de la carpeta archivos y generará una imagen .avs con resolución 1008 x 567.
+
+Si se desea otro tipo de formato de imagen entonces seguir los siguientes pasos
+
+```
+./bin/main 
+           escenario_archivo
+           escenario_archivo formato_imagen
+           escenario_archivo formato_imagen width height
+```
+#### Ejemplos
+
+```
+./bin/main
+./bin/main escenario
+./bin/main escenario jpg
+./bin/main escenario jpg 504 283
+
+make run
+make run i="escenario" t="jpg" w="504" h="283"
+
+```
 
 # Escenario
 
@@ -92,5 +116,9 @@
 <tr>
     <td>I<sub>A</sub></td>
     <td>Iluminación ambiente</td>
+</tr>
+<tr>
+    <td>C<sub>1</sub>, C<sub>2</sub>, C<sub>3</sub></td>
+    <td>Caída de la luz</td>
 </tr>
 </table>
