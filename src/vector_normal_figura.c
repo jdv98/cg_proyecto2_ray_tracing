@@ -30,3 +30,13 @@ Vertice * vector_normal_L(Foco * foco, Interseca * interseccion){
 
     return init_vertice_struct(nx/dis,ny/dis,nz/dis);
 }
+
+Vertice * vector_normal_v (Vertice * ojo, Interseca * interseccion) {
+    long double nx=ojo->x-(interseccion->interseccion->x),
+                ny=ojo->y-(interseccion->interseccion->y),
+                nz=ojo->z-(interseccion->interseccion->z);
+
+    long double dis=sqrtl(powl(nx,2)+powl(ny,2)+powl(nz,2));
+
+    return init_vertice_struct(nx/dis,ny/dis,nz/dis);
+}
