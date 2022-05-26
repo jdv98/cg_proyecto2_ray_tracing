@@ -139,12 +139,60 @@ long double reflexion_difusa (Interseca * interseccion,Vertice * a, Vertice * d)
     return intensidad;
 }
 
+long double reflexion_especular (Interseca * interseccion,Vertice * a, Vertice * d){
+    long double especulacion = 0.0,
+                tmax=0;
+    bool ignorar_luz=false;
+    Interseca *tmp = NULL;
+    Vertice * figura_normal,
+            * dir_luz;
+
+    figura_normal = vector_normal_figura(interseccion,interseccion->tipo);
+    Foco * iter = lista_focos;
+
+    while(iter != NULL) {
+        dir_luz = vector_normal_L(iter,interseccion);
+        long double lambert=dir_luz->x*figura_normal->x+
+                            dir_luz->y*figura_normal->y+
+                            dir_luz->z*figura_normal->z;
+
+        tmax=(iter->vertice->x - interseccion->interseccion->x)/dir_luz->x;
+        Figura *iter_figuras = lista_figuras;
+        
+        if(lambert > 0 && lambert <= 1){
+            do
+            {
+                if (iter_figuras->tipo == ESFERA)
+                {
+                    tmp = interseccion_esfera((Esfera *)iter_figuras->figura,interseccion->interseccion,dir_luz);
+                
+                    if (tmp != NULL && tmp->tmin > EPSILON && tmp->tmin<tmax)
+                        ignorar_luz=true;
+                }
+                iter_figuras=iter_figuras->sig;
+            } while (iter_figuras != lista_figuras);
+
+            if(!ignorar_luz) {
+                //figura_normal = vector_normal_figura(tmp, tmp->tipo);
+                especulacion += (2*(figura_normal->x*(dir_luz->x*figura_normal->x))-dir_luz->x)+
+                                (2*(figura_normal->y*(dir_luz->y*figura_normal->y))-dir_luz->y)+
+                                (2*(figura_normal->z*(dir_luz->z*figura_normal->z))-dir_luz->z);
+            }
+            ignorar_luz=false;
+        }
+        iter = iter->sig;
+    } 
+    return especulacion;
+}
+
 Color * de_que_color (Interseca * interseccion, Vertice * a, Vertice * d)
 {
     if (interseccion == NULL) 
         return init_color_struct (background_color->r,background_color->g,background_color->b);
 
     long double intensidad = reflexion_difusa (interseccion, a, d);
+    long double especulacion = reflexion_especular (interseccion, a, d);
+    if (especulacion > 1) especulacion = 1;
 
     intensidad+=(obtener_ka_figura(interseccion->figura, interseccion->tipo)*ambiente->iluminacion);
     
