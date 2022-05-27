@@ -68,14 +68,6 @@ void init_frame_struct(Vertice *bottom_left, Vertice *top_right)
     frame->top_right = top_right;
 }
 
-Cara *init_cara_struct()
-{
-    Cara *cara = malloc(sizeof(Cara));
-    cara->cant_vertices = 0;
-    cara->vertices = malloc(0);
-    return cara;
-}
-
 Esfera *init_esfera_struct(Color *color, long double radio, Vertice *vertice, long double * iluminacion)
 {
     Esfera *esfera = malloc(sizeof(Esfera));
@@ -95,14 +87,13 @@ Esfera *init_esfera_struct(Color *color, long double radio, Vertice *vertice, lo
 Poligono *init_poligono_struct(Color *color, long double * iluminacion)
 {
     Poligono *poligono = malloc(sizeof(Poligono));
-    poligono->cant_caras = 0;
-    poligono->caras = malloc(0);
+    poligono->cant_vertices = 0;
+    poligono->vertices = malloc(0);
     poligono->color = color;
 
     /***/
     poligono->k_d = iluminacion[0];
     poligono->k_a = iluminacion[1];
-    free(iluminacion);
     /***/
 
     return poligono;
@@ -121,18 +112,11 @@ void init_ambiente_struct(long double iluminacion){
 
 /***/
 
-void ins_vertice_cara(Cara *cara, Vertice *vertice)
+void ins_vertice_poligono(Poligono *poligono, Vertice * vertice)
 {
-    cara->cant_vertices++;
-    cara->vertices = realloc(cara->vertices, sizeof(Vertice) * cara->cant_vertices);
-    cara->vertices[cara->cant_vertices - 1] = vertice;
-}
-
-void ins_cara_poligono(Poligono *poligono, Cara *cara)
-{
-    poligono->cant_caras++;
-    poligono->caras = realloc(poligono->caras, sizeof(Cara) * poligono->cant_caras);
-    poligono->caras[poligono->cant_caras - 1] = cara;
+    poligono->cant_vertices++;
+    poligono->vertices = realloc(poligono->vertices, sizeof(Vertice) * poligono->cant_vertices);
+    poligono->vertices[poligono->cant_vertices - 1] = vertice;
 }
 
 void agregar_figura(void *figura, int tipo_figura)
@@ -194,23 +178,13 @@ void liberar_esfera(Esfera *esfera)
     free(esfera);
 }
 
-void liberar_cara(Cara *cara)
-{
-    for (size_t i = 0; i < cara->cant_vertices; i++)
-    {
-        free(cara->vertices[i]);
-    }
-    free(cara->vertices);
-    free(cara);
-}
-
 void liberar_poligono(Poligono *poligono)
 {
-    for (size_t i = 0; i < poligono->cant_caras; i++)
+    for (size_t i = 0; i < poligono->cant_vertices; i++)
     {
-        liberar_cara(poligono->caras[i]);
+        free(poligono->vertices[i]);
     }
-    free(poligono->caras);
+    free(poligono->vertices);
     free(poligono->color);
     free(poligono);
 }

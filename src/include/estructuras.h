@@ -4,7 +4,6 @@
 /**********************************/
 
 typedef struct Vertice Vertice;
-typedef struct Cara Cara;
 typedef struct Esfera Esfera;
 typedef struct Poligono Poligono;
 typedef struct Figura Figura;
@@ -20,12 +19,6 @@ struct Vertice {
     long double x,y,z;
 };
 
-struct Cara
-{
-    int cant_vertices;
-    Vertice * * vertices;
-};
-
 struct Esfera{
     Color * color;
     long double k_d; //Coeficiente de reflexion difusa
@@ -38,8 +31,8 @@ struct Poligono{
     Color * color;
     long double k_d; //Coeficiente de reflexion difusa
     long double k_a; //Coeficiente de iluminacion ambiente
-    int cant_caras;
-    Cara * * caras;
+    int cant_vertices;
+    Vertice * * vertices;
 };
 
 struct Figura
@@ -111,20 +104,16 @@ Vertice * init_vertice_struct(long double x,long double y,long double z);
 Foco * init_foco_struct(long double * datos, Vertice * vertice);
 void init_ojo_struct(Vertice * vertice);
 void init_frame_struct(Vertice * bottom_left,Vertice * top_right);
-Cara * init_cara_struct();
 Esfera * init_esfera_struct (Color * color, long double radio, Vertice * vertice, long double * iluminacion);
 Poligono * init_poligono_struct(Color * color, long double * iluminacion);
 void init_ambiente_struct(long double iluminacion);
 
-
-void ins_vertice_cara(Cara * cara, Vertice * vertice);
-void ins_cara_poligono(Poligono * poligono, Cara * cara);
+void ins_vertice_poligono(Poligono * poligono, Vertice * vertice);
 void agregar_figura(void * figura, int tipo_figura);
 void agregar_foco(Foco * foco);
 
 
 void liberar_esfera(Esfera *esfera);
-void liberar_cara(Cara *cara);
 void liberar_poligono(Poligono *poligono);
 void liberar_figura(int posicion);
 void liberar_figuras();

@@ -136,24 +136,29 @@ Vertice * leer_vertice(){
     return vertice;
 }
 
-void leer_caras(Poligono * poligono){
-    Cara * cara;
+void leer_poligono(Color * color, long double * iluminacion){
+    Poligono * poligono = init_poligono_struct(color, iluminacion);
+
     if (inc_iter_if_cmp('{'))
     {
         while (inc_iter_if_cmp('[')){
-            cara = init_cara_struct();
+            
             while (!inc_iter_if_cmp(']'))
             {
-                ins_vertice_cara(cara,leer_vertice());
+                ins_vertice_poligono(poligono,leer_vertice());
                 if(inc_iter_if_cmp(','));
             }
-            ins_cara_poligono(poligono,cara);
-            inc_iter_if_cmp(',');
+            agregar_figura(poligono,POLIGONO);
+
+            if(inc_iter_if_cmp(',')){
+                poligono = init_poligono_struct(color, iluminacion);
+            }
         }
-        
     }
     if (!inc_iter_if_cmp('}'))
-        error("cara");
+        error("poligono");
+    
+    free(iluminacion);
 }
 
 void leer_ojo(){
@@ -169,16 +174,14 @@ void leer_frame(){
     init_frame_struct(bl,tr);
 }
 
-void leer_poligono()
+void leer_figura()
 {
     Color * color = leer_color();
     inc_iter_if_cmp(',');
     long double * iluminacion=leer_iluminacion_figura();
-    Poligono * poligono = init_poligono_struct(leer_color(), iluminacion);
     inc_iter_if_cmp(',');
 
-    leer_caras(poligono);
-    agregar_figura(poligono,POLIGONO);
+    leer_poligono(color, iluminacion);
 }
 
 void leer_esfera()
@@ -232,7 +235,7 @@ void leer_ambiente(){
     }
 }
 
-void leer_figura()
+void leer_escenario()
 {
     if (inc_iter_if_cmp('{'))
     {
@@ -247,7 +250,7 @@ void leer_figura()
             leer_esfera();
 
         else if(tipo_figura == POLIGONO)
-            leer_poligono();
+            leer_figura();
         
         else if(tipo_figura == OJO)
             leer_ojo();
@@ -274,7 +277,7 @@ void cargar_figura(const char *filename)
     // LECTURA
     while (seguir_iter())
     {
-        leer_figura();
+        leer_escenario();
     }
 
     free(original);
