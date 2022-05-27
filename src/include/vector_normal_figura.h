@@ -5,5 +5,6 @@
 
 Vertice * vector_normal_figura(Interseca * interseccion, int tipo);
 Vertice * vector_normal_L(Foco * foco, Interseca * interseccion);
+Vertice * vector_R(Vertice * N, Vertice * L);
 
 #endif
