@@ -65,7 +65,7 @@ make run i="escenario" t="jpg" w="504" h="283"
 {
     1,
     {R, G, B},
-    {</code>K<sub>D</sub><code>, </code>K<sub>A</sub><code>},
+    {</code>K<sub>D</sub><code>, </code>K<sub>A</sub><code>, </code>K<sub>N</sub><code>, </code>K<sub>S</sub><code>},
     {X, Y, Z},
     Radio
 }
@@ -75,7 +75,7 @@ make run i="escenario" t="jpg" w="504" h="283"
 {
     2,
     {R, G, B},
-    {</code>K<sub>D</sub><code>, </code>K<sub>A</sub><code>},
+    {</code>K<sub>D</sub><code>, </code>K<sub>A</sub><code>, </code>K<sub>N</sub><code>, </code>K<sub>S</sub><code>},
     { 
         [
             {</code>X<sub>1</sub><code>, </code>Y<sub>1</sub><code>, </code>Z<sub>1</sub><code>},

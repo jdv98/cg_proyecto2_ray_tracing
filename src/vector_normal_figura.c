@@ -17,6 +17,10 @@ Vertice * vector_normal_figura(Interseca * interseccion, int tipo){
     if(tipo == ESFERA){
         return vector_normal_esfera((Interseca*)interseccion);
     }
+    else if( tipo == POLIGONO ){
+        Vertice * normal = ((Poligono*)interseccion->figura)->vector_normal;
+        return init_vertice_struct(normal->x,normal->y,normal->z);
+    }
 
     return NULL;
 }

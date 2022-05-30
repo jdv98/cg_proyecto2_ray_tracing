@@ -1,6 +1,8 @@
 #ifndef ESTRUCTURAS_H
 #define ESTRUCTURAS_H
 
+#define EPSILON 0.00000000005
+
 /**********************************/
 
 typedef struct Vertice Vertice;
@@ -33,6 +35,8 @@ struct Poligono{
     long double k_a; //Coeficiente de iluminacion ambiente
     int cant_vertices;
     Vertice * * vertices;
+    long double * ecuacion_plano;
+    Vertice * vector_normal;
 };
 
 struct Figura

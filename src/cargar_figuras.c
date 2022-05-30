@@ -35,7 +35,7 @@ void remove_all_chars(char* str, int * size, char * c, int size_c) {
 }
 
 long double * leer_iluminacion_figura(){
-    long double * datos = malloc(sizeof(long double) * 2);
+    long double * datos = malloc(sizeof(long double) * 4);
 
     if(!inc_iter_if_cmp('{'))
         error("{-> iluminacion figura");
@@ -55,11 +55,25 @@ long double * leer_iluminacion_figura(){
     else if(ka<0)
         ka=0;
 
+    if(!inc_iter_if_cmp(','))
+        error(",-> iluminacion figura");
+    
+    long double kn=leer_numero();
+
+
+    if(!inc_iter_if_cmp(','))
+        error(",-> iluminacion figura");
+
+    long double ks=leer_numero();
+
+
     if(!inc_iter_if_cmp('}'))
-        error("{-> iluminacion figura");
+        error("}-> iluminacion figura");
     
     datos[0]=kd;
     datos[1]=ka;
+    datos[2]=kn;
+    datos[3]=ks;
 
     return datos;
 }

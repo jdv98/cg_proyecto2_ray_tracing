@@ -10,7 +10,8 @@ FILES = main\
 	estructuras\
 	ray_tracer\
 	escritura\
-	vector_normal_figura
+	vector_normal_figura\
+	interseccion_objeto
 
 OBJECTS=$(patsubst %, $(OBJ_DIR)/%.o, $(FILES))
 OUTPUT=$(BIN_DIR)/main

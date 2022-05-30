@@ -1,5 +1,6 @@
 #include <malloc.h>
 #include <stdlib.h>
+#include <math.h>
 #include "include/estructuras.h"
 #include "include/tipo_figura.h"
 
@@ -8,6 +9,9 @@ Figura *lista_figuras = NULL;
 Ojo *ojo;
 Frame *frame;
 Ambiente * ambiente;
+
+
+void ecuacion_plano_vec_normal(Poligono * poligono);
 
 long double rango_cero_uno(long double numero){
     if(numero<0)
@@ -124,6 +128,9 @@ void agregar_figura(void *figura, int tipo_figura)
     Figura *figura_nueva = malloc(sizeof(Figura));
     figura_nueva->figura = figura;
     figura_nueva->tipo = tipo_figura;
+
+    if(tipo_figura == POLIGONO)
+        ecuacion_plano_vec_normal((Poligono * )figura);
 
     figura_nueva->ant = NULL;
     figura_nueva->sig = NULL;
@@ -275,4 +282,56 @@ long double obtener_ka_figura(void * figura, int tipo) {
         return ((Poligono*) figura)->k_a;
     }
     return -1;
+}
+
+void ecuacion_plano_vec_normal(Poligono * poligono){
+    if(poligono->cant_vertices<3)
+        exit(0);
+
+    Vertice * p0 = poligono->vertices[0],
+            * p1 = poligono->vertices[1],
+            * p2 = poligono->vertices[poligono->cant_vertices-1];
+    
+    Vertice * ver01 = init_vertice_struct(
+                                            p1->x-p0->x,
+                                            p1->y-p0->y,
+                                            p1->z-p0->z
+                                        ),
+            * ver02 = init_vertice_struct(
+                                            p2->x-p0->x,
+                                            p2->y-p0->y,
+                                            p2->z-p0->z
+                                        );
+
+    Vertice * normal = init_vertice_struct(
+                        (ver01->y * ver02->z) - (ver01->z * ver02->y),
+                        (ver01->x * ver02->z) - (ver01->z * ver02->x),
+                        (ver01->x * ver02->y) - (ver01->y * ver02->x)
+                        
+                    );
+    
+    free(ver01);
+    free(ver02);
+
+    long double L = sqrtl(
+                        powl(normal->x,2)+
+                        powl(normal->y,2)+
+                        powl(normal->z,2)
+                    );
+
+    poligono->ecuacion_plano=malloc(sizeof(long double)*4);
+    long double D = -((normal->x * p0->x)+ 
+                    (normal->y * p0->y)+
+                    (normal->z * p0->z))/L;
+    
+    normal->x = normal->x/L;
+    normal->y = normal->y/L;
+    normal->z = normal->z/L;
+
+    poligono->ecuacion_plano[0]=normal->x;
+    poligono->ecuacion_plano[1]=normal->y;
+    poligono->ecuacion_plano[2]=normal->z;
+    poligono->ecuacion_plano[3]=D;
+
+    poligono->vector_normal=normal;
 }
