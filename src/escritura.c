@@ -49,8 +49,8 @@ void escribir_imagen(MagickWand *magick_wand, PixelIterator * pixel_iterator, si
             PixelSetRed(pixel_wand_row[i], buffer[i][row].r);
             PixelSetGreen(pixel_wand_row[i], buffer[i][row].g);
             PixelSetBlue(pixel_wand_row[i], buffer[i][row].b);
-            PixelSyncIterator(pixel_iterator);
         }
+        PixelSyncIterator(pixel_iterator);
         pixel_wand_row = PixelGetNextIteratorRow(pixel_iterator, &number_wands);
 
         if((int)(((double)100/total)*(double)row)%10==0){
