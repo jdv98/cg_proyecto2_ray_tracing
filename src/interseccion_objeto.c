@@ -8,6 +8,29 @@
 #include <math.h>
 #include <stdbool.h>
 
+int interseccion_u_pos(long double ax1, long double ay1, long double ax2, long double ay2,
+                        long double bx1, long double by1, long double bx2, long double by2)
+{
+    long double a1 = ay2 - ay1,
+                b1 = ax1 - ax2,
+                a2 = by2 - by1,
+                b2 = bx1 - bx2;
+    
+    long double c1 = a1*(ax1) + b1*(ay1),
+                c2 = a2*(bx1)+ b2*(by1);
+
+    long double deter = a1*b2 - a2*b1;
+
+    if(deter != 0)
+    {
+        long double u = (b2*c1 - b1*c2)/deter;
+
+        if(u>0)
+            return 1;
+    }
+    return 0;
+}
+
 void vertice_interseccion(Interseca *interseccion, Vertice *a, Vertice *d)
 {
     long double nx = (a->x + (interseccion->tmin * d->x)),
@@ -140,12 +163,20 @@ bool interseccion_poligono_a_2d(Poligono *poligono, Vertice *interseccion)
 
     for (size_t i = 0; i < poligono->cant_vertices; i++)
     {
-        if ((n_poligono[i][0] > 0 && n_poligono[i + 1][0] < 0) || (n_poligono[i][0] < 0 && n_poligono[i + 1][0] > 0))
+        if (!( (n_poligono[i][1] > 0 && n_poligono[i + 1][1] > 0) || (n_poligono[i][1] < 0 && n_poligono[i + 1][1] < 0) ))
         {
-            if (n_poligono[i][1] > 0 && n_poligono[i + 1][1] > 0)
+            if (n_poligono[i][0] > 0 && n_poligono[i + 1][0] > 0)
             {
                 cont++;
             }
+            else if( !( (n_poligono[i][0]>0 && n_poligono[i][1]>0) || (n_poligono[i][0]<0 && n_poligono[i][1]<0) ) ){
+                long double u= n_poligono[i][0]>n_poligono[i + 1][0]?n_poligono[i][0]:n_poligono[i + 1][0];
+                if(interseccion_u_pos(0, 0, u, 0,n_poligono[i][0], n_poligono[i][1], n_poligono[i + 1][0], n_poligono[i + 1][1])){
+                    
+                    cont++;
+                }
+            }
+            
         }
         free(n_poligono[i]);
     }
