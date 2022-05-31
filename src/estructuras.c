@@ -322,8 +322,8 @@ void ecuacion_plano_vec_normal(Poligono * poligono){
     poligono->ecuacion_plano=malloc(sizeof(long double)*4);
     long double D = -((normal->x * p0->x)+ 
                     (normal->y * p0->y)+
-                    (normal->z * p0->z))/L;
-    
+                    (normal->z * p0->z));
+
     normal->x = normal->x/L;
     normal->y = normal->y/L;
     normal->z = normal->z/L;
@@ -331,7 +331,7 @@ void ecuacion_plano_vec_normal(Poligono * poligono){
     poligono->ecuacion_plano[0]=normal->x;
     poligono->ecuacion_plano[1]=normal->y;
     poligono->ecuacion_plano[2]=normal->z;
-    poligono->ecuacion_plano[3]=D;
+    poligono->ecuacion_plano[3]=D/L;
 
     poligono->vector_normal=normal;
 }
