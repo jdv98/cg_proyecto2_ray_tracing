@@ -22,19 +22,21 @@ struct Vertice {
 };
 
 struct Esfera{
-    int k_n;
     Color * color;
     long double k_d; //Coeficiente de reflexion difusa
     long double k_a; //Coeficiente de iluminacion ambiente
+    long double k_n;
+    long double k_s;
     Vertice * vertice;
     long double radio;
 };
 
 struct Poligono{
-    int k_n;
     Color * color;
     long double k_d; //Coeficiente de reflexion difusa
     long double k_a; //Coeficiente de iluminacion ambiente
+    long double k_n;
+    long double k_s;
     int cant_vertices;
     Vertice * * vertices;
     long double * ecuacion_plano;
@@ -111,8 +113,8 @@ Foco * init_foco_struct(long double * datos, Vertice * vertice);
 void init_ojo_struct(Vertice * vertice);
 void init_frame_struct(Vertice * bottom_left,Vertice * top_right);
 
-Esfera * init_esfera_struct (int k_n, Color * color, long double radio, Vertice * vertice, long double * iluminacion);
-Poligono * init_poligono_struct(int k_n, Color * color, long double * iluminacion);
+Esfera * init_esfera_struct (Color * color, long double radio, Vertice * vertice, long double * iluminacion);
+Poligono * init_poligono_struct(Color * color, long double * iluminacion);
 
 void init_ambiente_struct(long double iluminacion);
 
@@ -121,6 +123,7 @@ void agregar_figura(void * figura, int tipo_figura);
 void agregar_foco(Foco * foco);
 
 
+void liberar_interseca(Interseca * interserca);
 void liberar_esfera(Esfera *esfera);
 void liberar_poligono(Poligono *poligono);
 void liberar_figura(int posicion);
@@ -131,4 +134,7 @@ void liberar_frame();
 
 long double obtener_kd_figura(void * figura, int tipo);
 long double obtener_ka_figura(void * figura, int tipo);
+long double obtener_kn_figura(void * figura, int tipo);
+long double obtener_ks_figura(void * figura, int tipo);
+Color * obtener_color(void * figura, int tipo);
 #endif
