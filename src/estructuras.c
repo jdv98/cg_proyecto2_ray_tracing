@@ -9,6 +9,7 @@ Figura *lista_figuras = NULL;
 Ojo *ojo;
 Frame *frame;
 Ambiente * ambiente;
+int figuras_cont = 0;
 
 
 void ecuacion_plano_vec_normal(Poligono * poligono);
@@ -129,6 +130,7 @@ void ins_vertice_poligono(Poligono *poligono, Vertice * vertice)
 
 void agregar_figura(void *figura, int tipo_figura)
 {
+    figuras_cont ++;
     Figura *figura_nueva = malloc(sizeof(Figura));
     figura_nueva->figura = figura;
     figura_nueva->tipo = tipo_figura;
@@ -204,40 +206,16 @@ void liberar_poligono(Poligono *poligono)
     free(poligono);
 }
 
-void liberar_figura(int posicion)
-{
-    Figura *iter = lista_figuras;
-    int cont = 0;
-
-    do
-    {
-        if (cont == posicion)
-        {
-            Figura *ant = iter->ant;
-            Figura *sig = iter->sig;
-
-            ant->sig = sig;
-            sig->ant = ant;
-
-            if (posicion == 0)
-                lista_figuras = sig;
-
-            if (iter->tipo == ESFERA)
-                liberar_esfera((Esfera *)iter->figura);
-            else if (iter->tipo == POLIGONO)
-                liberar_poligono((Poligono *)iter->figura);
-
-            free(iter);
-            break;
-        }
-
-        iter = iter->sig;
-        cont++;
-    } while (iter != lista_figuras);
-}
-
 void liberar_figuras()
 {
+    if(figuras_cont){
+        if (lista_figuras->tipo == ESFERA)
+            liberar_esfera((Esfera *)lista_figuras->figura);
+        else if (lista_figuras->tipo == POLIGONO)
+            liberar_poligono((Poligono *)lista_figuras->figura);
+        return;
+    }
+
     Figura * iter = lista_figuras->sig,
             * tmp;
     do

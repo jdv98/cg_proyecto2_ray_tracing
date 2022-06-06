@@ -66,6 +66,7 @@ Interseca *interseccion_esfera(Esfera *esfera, Vertice *origen, Vertice *d)
         t1 = (-beta - sqrtl(tmp)) / (alpha * 2);
         a->tmin = t1;
 
+        vertice_interseccion(a, origen, d);
         return a;
     }
     else if (tmp > 0)

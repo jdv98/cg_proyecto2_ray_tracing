@@ -126,7 +126,6 @@ void agregar_foco(Foco * foco);
 void liberar_interseca(Interseca * interserca);
 void liberar_esfera(Esfera *esfera);
 void liberar_poligono(Poligono *poligono);
-void liberar_figura(int posicion);
 void liberar_figuras();
 void liberar_ojo();
 void liberar_frame();
