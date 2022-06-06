@@ -172,6 +172,7 @@ void leer_poligono(Color * color, long double * iluminacion){
     if (!inc_iter_if_cmp('}'))
         error("poligono");
     
+    free(color);    
     free(iluminacion);
 }
 

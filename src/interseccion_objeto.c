@@ -21,12 +21,13 @@ int interseccion_u_pos(long double ax1, long double ay1, long double ax2, long d
 
     long double deter = a1*b2 - a2*b1;
 
-    if(deter != 0)
+    if(deter>EPSILON || deter<-EPSILON)
     {
         long double u = (b2*c1 - b1*c2)/deter;
 
-        if(u>0)
+        if(u>=0){
             return 1;
+        }
     }
     return 0;
 }
@@ -102,7 +103,7 @@ Interseca *interseccion_esfera(Esfera *esfera, Vertice *origen, Vertice *d)
 
 void convertir_poligono_a_2d(Poligono *poligono, Vertice *interseccion, long double ***lista_vertices)
 {
-    (*lista_vertices) = (long double **)malloc(sizeof(long double) * (poligono->cant_vertices + 1));
+    (*lista_vertices) = (long double **) calloc((poligono->cant_vertices  ),sizeof(long double) );
 
     int estado = -1;
 
@@ -111,28 +112,41 @@ void convertir_poligono_a_2d(Poligono *poligono, Vertice *interseccion, long dou
         b = poligono->ecuacion_plano[1] >= (long double)0 ? poligono->ecuacion_plano[1] : -poligono->ecuacion_plano[1],
         c = poligono->ecuacion_plano[2] >= (long double)0 ? poligono->ecuacion_plano[2] : -poligono->ecuacion_plano[2];
 
+    (*lista_vertices)[0] = (long double *)malloc(sizeof(long double) * 2);
     (*lista_vertices)[poligono->cant_vertices] = (long double *)malloc(sizeof(long double) * 2);
 
     if (a > b && a > c)
     {
         estado = 0;
-        (*lista_vertices)[poligono->cant_vertices][0] = poligono->vertices[0]->y - interseccion->y;
-        (*lista_vertices)[poligono->cant_vertices][1] = poligono->vertices[0]->z - interseccion->z;
+
+        (*lista_vertices)[0][0] = poligono->vertices[0]->y - interseccion->y;
+        (*lista_vertices)[0][1] = poligono->vertices[0]->z - interseccion->z;
+
+        (*lista_vertices)[poligono->cant_vertices][0] = (*lista_vertices)[0][0];
+        (*lista_vertices)[poligono->cant_vertices][1] = (*lista_vertices)[0][1];
     }
     else if (b > a && b > c)
     {
         estado = 1;
-        (*lista_vertices)[poligono->cant_vertices][0] = poligono->vertices[0]->x - interseccion->x;
-        (*lista_vertices)[poligono->cant_vertices][1] = poligono->vertices[0]->z - interseccion->z;
+
+        (*lista_vertices)[0][0] = poligono->vertices[0]->x - interseccion->x;
+        (*lista_vertices)[0][1] = poligono->vertices[0]->z - interseccion->z;
+
+        (*lista_vertices)[poligono->cant_vertices][0] = (*lista_vertices)[0][0];
+        (*lista_vertices)[poligono->cant_vertices][1] = (*lista_vertices)[0][1];
     }
     else
     {
         estado = 2;
-        (*lista_vertices)[poligono->cant_vertices][0] = poligono->vertices[0]->x - interseccion->x;
-        (*lista_vertices)[poligono->cant_vertices][1] = poligono->vertices[0]->y - interseccion->y;
+
+        (*lista_vertices)[0][0] = poligono->vertices[0]->x - interseccion->x;
+        (*lista_vertices)[0][1] = poligono->vertices[0]->y - interseccion->y;
+
+        (*lista_vertices)[poligono->cant_vertices][0] = (*lista_vertices)[0][0];
+        (*lista_vertices)[poligono->cant_vertices][1] = (*lista_vertices)[0][1];
     }
 
-    for (size_t i = 0; i < poligono->cant_vertices; i++)
+    for (size_t i = 1; i < poligono->cant_vertices; i++)
     {
         (*lista_vertices)[i] = (long double *)malloc(sizeof(long double) * 2);
 
@@ -163,16 +177,23 @@ bool interseccion_poligono_a_2d(Poligono *poligono, Vertice *interseccion)
 
     for (size_t i = 0; i < poligono->cant_vertices; i++)
     {
+        
         if (!( (n_poligono[i][1] > 0 && n_poligono[i + 1][1] > 0) || (n_poligono[i][1] < 0 && n_poligono[i + 1][1] < 0) ))
         {
-            if (n_poligono[i][0] > 0 && n_poligono[i + 1][0] > 0)
+            if ( n_poligono[i][0] > 0 && n_poligono[i + 1][0] > 0 )
             {
+                if(n_poligono[i + 1][1] == 0)
+                    i++;
+
                 cont++;
             }
-            else if( !( (n_poligono[i][0]>0 && n_poligono[i][1]>0) || (n_poligono[i][0]<0 && n_poligono[i][1]<0) ) ){
+            else if ( !( (n_poligono[i][0] > EPSILON && n_poligono[i + 1][0] > EPSILON) || (n_poligono[i][0] < -EPSILON && n_poligono[i + 1][0] < -EPSILON) ) ){
                 long double u= n_poligono[i][0]>n_poligono[i + 1][0]?n_poligono[i][0]:n_poligono[i + 1][0];
-                if(interseccion_u_pos(0, 0, u, 0,n_poligono[i][0], n_poligono[i][1], n_poligono[i + 1][0], n_poligono[i + 1][1])){
-                    
+
+                if(interseccion_u_pos((long double)-0.0, (long double)-0.0, u+(long double)1000, (long double)-0.0, n_poligono[i][0], n_poligono[i][1], n_poligono[i + 1][0], n_poligono[i + 1][1])){
+                    if(n_poligono[i + 1][1] == 0)
+                        i++;
+
                     cont++;
                 }
             }

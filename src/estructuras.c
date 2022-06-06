@@ -93,7 +93,7 @@ Poligono *init_poligono_struct(Color *color, long double * iluminacion)
     Poligono *poligono = malloc(sizeof(Poligono));
     poligono->cant_vertices = 0;
     poligono->vertices = malloc(0);
-    poligono->color = color;
+    poligono->color = init_color_struct(color->r,color->g,color->b);
 
     /***/
     poligono->k_d = iluminacion[0];
@@ -178,11 +178,15 @@ void agregar_foco(Foco * foco){
 
 /***/
 
+void liberar_interseca(Interseca * interserca){
+    free(interserca->interseccion);
+    free(interserca);
+}
+
 void liberar_esfera(Esfera *esfera)
 {
     free(esfera->color);
     free(esfera->vertice);
-    free(esfera);
 }
 
 void liberar_poligono(Poligono *poligono)
@@ -245,6 +249,7 @@ void liberar_figuras()
             liberar_esfera((Esfera *)tmp->figura);
         else if (tmp->tipo == POLIGONO)
             liberar_poligono((Poligono *)tmp->figura);
+        free(tmp);
 
     } while (iter != NULL);
 }
@@ -284,6 +289,16 @@ long double obtener_ka_figura(void * figura, int tipo) {
     return -1;
 }
 
+Color * obtener_color(void * figura, int tipo){
+    if(tipo==ESFERA){
+        return ((Esfera*) figura)->color;
+    }
+    else if(tipo==POLIGONO){
+        return ((Poligono*) figura)->color;
+    }
+    return NULL;
+}
+
 void ecuacion_plano_vec_normal(Poligono * poligono){
     if(poligono->cant_vertices<3)
         exit(0);
@@ -305,7 +320,7 @@ void ecuacion_plano_vec_normal(Poligono * poligono){
 
     Vertice * normal = init_vertice_struct(
                         (ver01->y * ver02->z) - (ver01->z * ver02->y),
-                        (ver01->x * ver02->z) - (ver01->z * ver02->x),
+                        (ver01->z * ver02->x) - (ver01->x * ver02->z),
                         (ver01->x * ver02->y) - (ver01->y * ver02->x)
                         
                     );

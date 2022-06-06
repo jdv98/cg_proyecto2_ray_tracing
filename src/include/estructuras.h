@@ -117,6 +117,7 @@ void agregar_figura(void * figura, int tipo_figura);
 void agregar_foco(Foco * foco);
 
 
+void liberar_interseca(Interseca * interserca);
 void liberar_esfera(Esfera *esfera);
 void liberar_poligono(Poligono *poligono);
 void liberar_figura(int posicion);
@@ -127,4 +128,5 @@ void liberar_frame();
 
 long double obtener_kd_figura(void * figura, int tipo);
 long double obtener_ka_figura(void * figura, int tipo);
+Color * obtener_color(void * figura, int tipo);
 #endif

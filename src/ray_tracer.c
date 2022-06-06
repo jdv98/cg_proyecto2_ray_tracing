@@ -53,8 +53,12 @@ long double reflexion_difusa (Interseca * interseccion,Vertice * a, Vertice * d)
                     tmp = interseccion_poligono((Poligono *)iter_figuras->figura,interseccion->interseccion,dir_luz);
                 }
 
-                if (tmp != NULL && tmp->tmin > EPSILON && tmp->tmin<tmax)
+                if (tmp != NULL){
+                    if(tmp->tmin > EPSILON && tmp->tmin<tmax)
                         ignorar_luz=true;
+                    liberar_interseca(tmp);
+                }
+
                 iter_figuras=iter_figuras->sig;
             } while (iter_figuras != lista_figuras);
 
@@ -69,6 +73,7 @@ long double reflexion_difusa (Interseca * interseccion,Vertice * a, Vertice * d)
             }
             ignorar_luz=false;
         }
+        free(dir_luz);
         iter = iter->sig;
     } 
     return reflex_difusa;
@@ -110,9 +115,12 @@ long double reflexion_especular (Interseca * interseccion,Vertice * a, Vertice *
                 else if(iter_figuras->tipo == POLIGONO){
                     tmp = interseccion_poligono((Poligono *)iter_figuras->figura,interseccion->interseccion,dir_luz);
                 }
-                if (tmp != NULL && tmp->tmin > EPSILON && tmp->tmin<tmax)
+                if (tmp != NULL){
+                    if(tmp->tmin > EPSILON && tmp->tmin<tmax)
                         ignorar_luz=true;
-
+                    liberar_interseca(tmp);
+                } 
+                
                 iter_figuras=iter_figuras->sig;
             } while (iter_figuras != lista_figuras);
 
@@ -125,6 +133,7 @@ long double reflexion_especular (Interseca * interseccion,Vertice * a, Vertice *
         iter = iter->sig;
 
         free(R);
+        free(dir_luz);
     } 
     free(V);
     return reflex_especular;
@@ -151,27 +160,17 @@ Color * de_que_color (Interseca * interseccion, Vertice * a, Vertice * d)
     else if(reflex_difusa<(long double)0)
         reflex_difusa=0;
 
+    Color * color = obtener_color(interseccion->figura, interseccion->tipo);
+    liberar_interseca(interseccion);
     
-    if(interseccion->tipo == ESFERA) {
-        long double rd=((Esfera *) interseccion->figura)->color->r*reflex_difusa,
-                    gd=((Esfera *) interseccion->figura)->color->g*reflex_difusa,
-                    bd=((Esfera *) interseccion->figura)->color->b*reflex_difusa;
-        return init_color_struct (
-                                    rd+( reflex_especular * ( ((long double)1.0) - rd ) ),
-                                    gd+( reflex_especular * ( ((long double)1.0) - gd ) ),
-                                    bd+( reflex_especular * ( ((long double)1.0) - bd ) )
-                                );
-    }
-    else if(interseccion->tipo == POLIGONO) {
-        long double rd=((Poligono *) interseccion->figura)->color->r*reflex_difusa,
-                    gd=((Poligono *) interseccion->figura)->color->g*reflex_difusa,
-                    bd=((Poligono *) interseccion->figura)->color->b*reflex_difusa;
-        return init_color_struct (
-                                    rd+( reflex_especular * ( ((long double)1.0) - rd ) ),
-                                    gd+( reflex_especular * ( ((long double)1.0) - gd ) ),
-                                    bd+( reflex_especular * ( ((long double)1.0) - bd ) )
-                                );
-    }
+    long double rd=color->r*reflex_difusa,
+                gd=color->g*reflex_difusa,
+                bd=color->b*reflex_difusa;
+    return init_color_struct (
+                                rd+( reflex_especular * ( ((long double)1.0) - rd ) ),
+                                gd+( reflex_especular * ( ((long double)1.0) - gd ) ),
+                                bd+( reflex_especular * ( ((long double)1.0) - bd ) )
+                            );
 }
 
 Color * first_intersection (Vertice * a, Vertice * d)
@@ -197,11 +196,11 @@ Color * first_intersection (Vertice * a, Vertice * d)
             }
             else if (interseccion->tmin > tmp->tmin)
             {
-                free(interseccion);
+                liberar_interseca(interseccion);
                 interseccion = tmp;
             }
             else{
-                free(tmp);
+                liberar_interseca(tmp);
             }
         }
 
@@ -251,4 +250,7 @@ void ray_tracer()
         system("clear");
         printf("Ray tracer > %i%\n",100);
     }
+    liberar_figuras();
+    liberar_ojo();
+    liberar_frame();
 }
