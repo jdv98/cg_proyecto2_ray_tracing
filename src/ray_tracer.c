@@ -21,6 +21,7 @@ long double fatt_distancia_luz(Foco * foco, Vertice * a){
 
     return f_att > 1 ? 1 : f_att;
 }
+
 long double reflexion_difusa (Interseca * interseccion,Vertice * a, Vertice * d){
     long double reflex_difusa=0.0,
                 tmax=0;
@@ -118,7 +119,8 @@ long double reflexion_especular (Interseca * interseccion,Vertice * a, Vertice *
 
             
             if(!ignorar_luz) {
-                reflex_especular += rxl*iter->intensidad*fatt_distancia_luz(iter, interseccion->interseccion);
+                //reflex_especular += rxl*iter->intensidad*fatt_distancia_luz(iter, interseccion->interseccion);
+                reflex_especular += powl(rxl, (long double) obtener_kn_figura(interseccion->figura, interseccion->tipo))*iter->intensidad*fatt_distancia_luz(iter, interseccion->interseccion);
             }
             ignorar_luz=false;
         }

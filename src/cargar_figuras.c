@@ -150,8 +150,8 @@ Vertice * leer_vertice(){
     return vertice;
 }
 
-void leer_poligono(Color * color, long double * iluminacion){
-    Poligono * poligono = init_poligono_struct(color, iluminacion);
+void leer_poligono(int k_n, Color * color, long double * iluminacion){
+    Poligono * poligono = init_poligono_struct(k_n, color, iluminacion);
 
     if (inc_iter_if_cmp('{'))
     {
@@ -165,7 +165,7 @@ void leer_poligono(Color * color, long double * iluminacion){
             agregar_figura(poligono,POLIGONO);
 
             if(inc_iter_if_cmp(',')){
-                poligono = init_poligono_struct(color, iluminacion);
+                poligono = init_poligono_struct(k_n , color, iluminacion);
             }
         }
     }
@@ -190,16 +190,20 @@ void leer_frame(){
 
 void leer_figura()
 {
+    int k_n = leer_numero ();
+    inc_iter_if_cmp(',');
     Color * color = leer_color();
     inc_iter_if_cmp(',');
     long double * iluminacion=leer_iluminacion_figura();
     inc_iter_if_cmp(',');
 
-    leer_poligono(color, iluminacion);
+    leer_poligono(k_n, color, iluminacion);
 }
 
 void leer_esfera()
 {
+    int k_n = leer_numero ();
+    inc_iter_if_cmp(',');
     Color * color = leer_color();
     inc_iter_if_cmp(',');
     long double * iluminacion=leer_iluminacion_figura();    
@@ -208,7 +212,7 @@ void leer_esfera()
     inc_iter_if_cmp(',');
     long double radio=leer_numero();
 
-    agregar_figura(init_esfera_struct(color,radio,vertice,iluminacion),ESFERA);
+    agregar_figura(init_esfera_struct(k_n, color,radio,vertice,iluminacion),ESFERA);
 }
 
 void leer_foco(){

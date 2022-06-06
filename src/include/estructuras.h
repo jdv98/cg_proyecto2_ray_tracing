@@ -22,6 +22,7 @@ struct Vertice {
 };
 
 struct Esfera{
+    int k_n;
     Color * color;
     long double k_d; //Coeficiente de reflexion difusa
     long double k_a; //Coeficiente de iluminacion ambiente
@@ -30,6 +31,7 @@ struct Esfera{
 };
 
 struct Poligono{
+    int k_n;
     Color * color;
     long double k_d; //Coeficiente de reflexion difusa
     long double k_a; //Coeficiente de iluminacion ambiente
@@ -108,8 +110,10 @@ Vertice * init_vertice_struct(long double x,long double y,long double z);
 Foco * init_foco_struct(long double * datos, Vertice * vertice);
 void init_ojo_struct(Vertice * vertice);
 void init_frame_struct(Vertice * bottom_left,Vertice * top_right);
-Esfera * init_esfera_struct (Color * color, long double radio, Vertice * vertice, long double * iluminacion);
-Poligono * init_poligono_struct(Color * color, long double * iluminacion);
+
+Esfera * init_esfera_struct (int k_n, Color * color, long double radio, Vertice * vertice, long double * iluminacion);
+Poligono * init_poligono_struct(int k_n, Color * color, long double * iluminacion);
+
 void init_ambiente_struct(long double iluminacion);
 
 void ins_vertice_poligono(Poligono * poligono, Vertice * vertice);

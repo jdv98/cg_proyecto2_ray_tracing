@@ -72,9 +72,10 @@ void init_frame_struct(Vertice *bottom_left, Vertice *top_right)
     frame->top_right = top_right;
 }
 
-Esfera *init_esfera_struct(Color *color, long double radio, Vertice *vertice, long double * iluminacion)
+Esfera *init_esfera_struct(int k_n, Color *color, long double radio, Vertice *vertice, long double * iluminacion)
 {
     Esfera *esfera = malloc(sizeof(Esfera));
+    esfera->k_n = k_n;
     esfera->color = color;
 
     /***/
@@ -88,9 +89,10 @@ Esfera *init_esfera_struct(Color *color, long double radio, Vertice *vertice, lo
     return esfera;
 }
 
-Poligono *init_poligono_struct(Color *color, long double * iluminacion)
+Poligono *init_poligono_struct(int k_n, Color *color, long double * iluminacion)
 {
     Poligono *poligono = malloc(sizeof(Poligono));
+    poligono->k_n = k_n;
     poligono->cant_vertices = 0;
     poligono->vertices = malloc(0);
     poligono->color = color;
@@ -280,6 +282,16 @@ long double obtener_ka_figura(void * figura, int tipo) {
     }
     else if(tipo==POLIGONO){
         return ((Poligono*) figura)->k_a;
+    }
+    return -1;
+}
+
+int obtener_kn_figura (void * figura, int tipo){
+    if(tipo==ESFERA){
+        return ((Esfera*) figura)->k_n;
+    }
+    else if(tipo==POLIGONO){
+        return ((Poligono*) figura)->k_n;
     }
     return -1;
 }
