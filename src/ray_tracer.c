@@ -127,8 +127,7 @@ long double reflexion_especular (Interseca * interseccion,Vertice * a, Vertice *
 
             
             if(!ignorar_luz) {
-                //reflex_especular += rxl*iter->intensidad*fatt_distancia_luz(iter, interseccion->interseccion);
-                reflex_especular += powl(rxl, (long double) obtener_kn_figura(interseccion->figura, interseccion->tipo))*iter->intensidad*fatt_distancia_luz(iter, interseccion->interseccion);
+                reflex_especular += powl(rxl, (long double) obtener_kn_figura(interseccion->figura, interseccion->tipo))*obtener_ks_figura(interseccion->figura, interseccion->tipo)*iter->intensidad*fatt_distancia_luz(iter, interseccion->interseccion);
             }
             ignorar_luz=false;
         }

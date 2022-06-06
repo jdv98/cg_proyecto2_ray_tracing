@@ -305,10 +305,10 @@ long double obtener_kn_figura (void * figura, int tipo){
 
 long double obtener_ks_figura (void * figura, int tipo){
     if(tipo==ESFERA){
-        return ((Esfera*) figura)->k_n;
+        return ((Esfera*) figura)->k_s;
     }
     else if(tipo==POLIGONO){
-        return ((Poligono*) figura)->k_n;
+        return ((Poligono*) figura)->k_s;
     }
     return -1;
 }
