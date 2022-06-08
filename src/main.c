@@ -16,7 +16,7 @@ int main(int argc, char **argv)
   RESOLUCION_W = 1008;
   RESOLUCION_H = 567;
   char * nombre_escenario="escenario";
-  char * tipo_imagen = "jpg";
+  char * tipo_imagen = "avs";
 
   if(argc == 2){
     nombre_escenario=argv[1];
