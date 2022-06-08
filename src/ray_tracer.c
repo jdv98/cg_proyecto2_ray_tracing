@@ -77,6 +77,7 @@ long double reflexion_difusa (Interseca * interseccion,Vertice * a, Vertice * d)
         free(dir_luz);
         iter = iter->sig;
     } 
+    free(figura_normal);
     return reflex_difusa;
 }
 
@@ -106,7 +107,7 @@ long double reflexion_especular (Interseca * interseccion,Vertice * a, Vertice *
         R = vector_R(figura_normal, dir_luz);
         rxl=(R->x*V->x)+(R->y*V->y)+(R->z*V->z);
 
-        if(lambert > 0 && lambert <= 1 && rxl>0.0 && rxl<=1.0){
+        if(lambert > 0 && lambert <= 1 && rxl>=0.0 && rxl<=1.0){
             do
             {
                 if (iter_figuras->tipo == ESFERA)
@@ -137,6 +138,7 @@ long double reflexion_especular (Interseca * interseccion,Vertice * a, Vertice *
         free(dir_luz);
     } 
     free(V);
+    free(figura_normal);
     return reflex_especular;
 }
 

@@ -171,20 +171,23 @@ void convertir_poligono_a_2d(Poligono *poligono, Vertice *interseccion, long dou
 
 bool interseccion_poligono_a_2d(Poligono *poligono, Vertice *interseccion)
 {
-    long double **n_poligono;
+    long double **n_poligono = NULL;
     convertir_poligono_a_2d(poligono, interseccion, &n_poligono);
 
     int cont = 0;
+    size_t i = 0;
 
-    for (size_t i = 0; i < poligono->cant_vertices; i++)
+    for (; i < poligono->cant_vertices; i++)
     {
         
         if (!( (n_poligono[i][1] > 0 && n_poligono[i + 1][1] > 0) || (n_poligono[i][1] < 0 && n_poligono[i + 1][1] < 0) ))
         {
             if ( n_poligono[i][0] > 0 && n_poligono[i + 1][0] > 0 )
             {
-                if(n_poligono[i + 1][1] == 0)
+                if(n_poligono[i + 1][1] == 0){
+                    free(n_poligono[i]);
                     i++;
+                }
 
                 cont++;
             }
@@ -192,8 +195,10 @@ bool interseccion_poligono_a_2d(Poligono *poligono, Vertice *interseccion)
                 long double u= n_poligono[i][0]>n_poligono[i + 1][0]?n_poligono[i][0]:n_poligono[i + 1][0];
 
                 if(interseccion_u_pos((long double)-0.0, (long double)-0.0, u+(long double)1000, (long double)-0.0, n_poligono[i][0], n_poligono[i][1], n_poligono[i + 1][0], n_poligono[i + 1][1])){
-                    if(n_poligono[i + 1][1] == 0)
+                    if(n_poligono[i + 1][1] == 0){
+                        free(n_poligono[i]);
                         i++;
+                    }
 
                     cont++;
                 }
@@ -202,7 +207,8 @@ bool interseccion_poligono_a_2d(Poligono *poligono, Vertice *interseccion)
         }
         free(n_poligono[i]);
     }
-    free(n_poligono[poligono->cant_vertices]);
+    if(i < poligono->cant_vertices+1)
+        free(n_poligono[poligono->cant_vertices]);
     free(n_poligono);
 
     return cont % 2;
