@@ -71,7 +71,7 @@ make run i="escenario" t="jpg" w="504" h="283"
 }
 
 
-/POLIGONO/
+/CONJUNTO DE POLIGONOS/
 {
     2,
     {R, G, B},
@@ -90,8 +90,7 @@ make run i="escenario" t="jpg" w="504" h="283"
         .
         .
         .
-    },
-    Radio
+    }
 }
 </code>
 </pre>
@@ -108,6 +107,14 @@ make run i="escenario" t="jpg" w="504" h="283"
 <tr>
     <td>K<sub>A</sub></td>
     <td>Coeficiente de iluminación ambiente</td>
+</tr>
+<tr>
+    <td>K<sub>N</sub></td>
+    <td>Tamaño de la mancha del reflejo de la luz</td>
+</tr>
+<tr>
+    <td>K<sub>S</sub></td>
+    <td>Coeficiente de reflexión especular</td>
 </tr>
 <tr>
     <td>I<sub>P</sub></td>
