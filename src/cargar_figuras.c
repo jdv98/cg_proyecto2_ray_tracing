@@ -65,6 +65,10 @@ long double * leer_iluminacion_figura(){
         error(",-> iluminacion figura");
 
     long double ks=leer_numero();
+    if(ks>1)
+        ks=1;
+    else if(ks<0)
+        ks=0;
 
 
     if(!inc_iter_if_cmp('}'))
